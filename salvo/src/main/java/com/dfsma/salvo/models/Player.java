@@ -1,11 +1,18 @@
-package com.dfsma.salvo;
+package com.dfsma.salvo.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "gamePlayers"})
 public class Player {
 
     @Id
@@ -15,6 +22,12 @@ public class Player {
     private String userName;
     private String email;
 
+
+
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    Set<GamePlayer> playerGames;
+
+
     public Player() {}
 
     public Player(String userName, String email) {
@@ -22,6 +35,10 @@ public class Player {
         this.email = email;
     }
 
+    /*Getter y Setters*/
+    public long getId() {
+        return id;
+    }
     public String getUserName() {
         return userName;
     }
@@ -36,6 +53,15 @@ public class Player {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void addGamePlayer(GamePlayer gamePlayer){
+        gamePlayer.setPlayer(this);
+        playerGames.add(gamePlayer);
+
+    }
+    public List<Player> getGames() {
+        return playerGames.stream().map(sub -> sub.getPlayer()).collect(toList());
     }
 
     @Override

@@ -1,14 +1,10 @@
-package com.dfsma.salvo;
+package com.dfsma.salvo.repositories;
 
+import com.dfsma.salvo.models.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-
-import java.util.*;
-
 @RepositoryRestResource
-public interface PlayerRepository extends JpaRepository<Player, Long> {
-
-
+public interface GameRepository extends JpaRepository<Game, Long> {
 
 }
