@@ -2,12 +2,10 @@ package com.dfsma.salvo.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -25,7 +23,7 @@ public class Player {
 
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    Set<GamePlayer> playerGames;
+    Set<GamePlayer> gamePlayers = new HashSet<>();
 
 
     public Player() {}
@@ -57,12 +55,17 @@ public class Player {
 
     public void addGamePlayer(GamePlayer gamePlayer){
         gamePlayer.setPlayer(this);
-        playerGames.add(gamePlayer);
+        gamePlayers.add(gamePlayer);
 
     }
-    public List<Player> getGames() {
-        return playerGames.stream().map(sub -> sub.getPlayer()).collect(toList());
+
+    public Map<String, Object> getPlayerInfo(){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", getId()); //PLAYER ID
+        dto.put("email", getEmail()); // PLAYER EMAIL
+        return dto;
     }
+
 
     @Override
     public String toString() {

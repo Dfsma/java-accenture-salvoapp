@@ -2,7 +2,6 @@ package com.dfsma.salvo.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -21,20 +20,18 @@ public class Game {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private Date date;
+    private LocalDateTime date;
 
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
 
 
-
     public Game() {
 
     }
 
-    public Game(Date date) {
-
+    public Game(LocalDateTime date) {
         this.date = date;
     }
 
@@ -42,22 +39,37 @@ public class Game {
         return id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public void addGamePlayer(GamePlayer gamePlayer){
+    public void addGamePlayer(GamePlayer gamePlayer) {
         gamePlayer.setGame(this);
         gamePlayers.add(gamePlayer);
     }
 
+
     public List<Player> getPlayers() {
         return gamePlayers.stream().map(sub -> sub.getPlayer()).collect(toList());
     }
+
+    public List<GamePlayer> getGamePlayers(){
+        return new ArrayList<>(this.gamePlayers);
+    }
+
+
+    public Map<String, Object> getGameAndPlayersInfo(){ //PRINCIPAL DATA FOR RUTE /API/GAMES
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", getId()); //GAME ID
+        dto.put("created", getDate()); //DATE CREATION
+        dto.put("gamePlayers", getGamePlayers().stream().map(GamePlayer::getGamePlayerInfo).collect(toList())); //GAME PLAYERS ARRAY WHO CONTAINS AN ARRAY[] OF PLAYER INFO OBJECT{} -> SEE GAME PLAYER CLASS.
+        return dto;
+    }
+
 
     @Override
     public String toString() {

@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -27,48 +29,37 @@ public class SalvoApplication {
 	public CommandLineRunner initData(PlayerRepository repoPlayer, GamePlayerRepository repoGamePlayer, GameRepository repoGame){
 		return (args) -> {
 
-
-			Date date = new Date(System.currentTimeMillis());
-
-			/*
-
-			Player player1 = new Player("Diego", "diegof.df58@gmail.com");
+			Player player1 = new Player("Diego", "diego@gmail.com");
 			Player player2 = new Player("Juan", "juan@gmail.com");
 			Player player3 = new Player("Erika", "erika@gmail.com" );
 			Player player4 = new Player("Emilia","emilia@gmail.com");
-			repoPlayer.save(player1);
-			repoPlayer.save(player2);
-			repoPlayer.save(player3);
-			repoPlayer.save(player4);
 
 
+			LocalDateTime date = LocalDateTime.now();
 			Game game1 = new Game(date);
-			repoGame.save(game1);
 
-			GamePlayer gmp1 = new GamePlayer(game1, player1);
-			GamePlayer gmp2 = new GamePlayer(game1, player2);
-			repoGamePlayer.save(gmp1);
-			repoGamePlayer.save(gmp2);
-			*/
-
-			Player P1 = new Player("Angela", "angie@proyecto.acc");
-			Player P2 = new Player("Brian", "brian@proyecto.acc");
-			Player P3 = new Player("Carlos", "charles@proyecto.acc");
-			Player P4 = new Player("Daniela", "dani@proyecto.acc");
-
-			Date current = new Date();
-
-			Game G1 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
-			Game G2 = new Game(current); current = Date.from(current.toInstant().plusSeconds(3600));
+			/*Local Data + 1 hrs (game2)*/
+			date = LocalDateTime.from(date.plusSeconds(3600));
+			Game game2 = new Game(date);
+			date = LocalDateTime.from(date.plusSeconds(3600));
+			Game game3 = new Game(date);
 
 
-			GamePlayer GP1 = new GamePlayer(G1, P1);
-			GamePlayer GP2 = new GamePlayer(G1, P2);
 
-			repoPlayer.saveAll(Arrays.asList(P1,P2,P3,P4));
-			repoGame.saveAll(Arrays.asList(G1,G2));
-			repoGamePlayer.saveAll(Arrays.asList(GP1,GP2));
+			GamePlayer gamePlayer1 = new GamePlayer(player1, game1);
+			GamePlayer gamePlayer2 = new GamePlayer(player2, game1);
 
+			GamePlayer gamePlayer3 = new GamePlayer(player3, game2);
+			GamePlayer gamePlayer4 = new GamePlayer(player4, game2);
+
+			GamePlayer gamePlayer5 = new GamePlayer(player1, game3);
+			GamePlayer gamePlayer6 = new GamePlayer(player4, game3);
+
+
+
+			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
+			repoGame.saveAll(Arrays.asList(game1,game2, game3));
+			repoGamePlayer.saveAll(Arrays.asList(gamePlayer1,gamePlayer2, gamePlayer3, gamePlayer4, gamePlayer5, gamePlayer6));
 
 
 		};
