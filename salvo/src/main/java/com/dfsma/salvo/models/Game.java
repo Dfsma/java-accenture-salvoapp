@@ -66,8 +66,10 @@ public class Game {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", getId()); //GAME ID
         dto.put("created", getDate()); //DATE CREATION
-        dto.put("gamePlayers", getGamePlayers().stream().map(GamePlayer::getGamePlayerInfo).collect(toList())); //GAME PLAYERS ARRAY WHO CONTAINS AN ARRAY[] OF PLAYER INFO OBJECT{} -> SEE GAME PLAYER CLASS.
+        dto.put("gamePlayers", getGamePlayers().stream().map(gamePlayer -> gamePlayer.getGamePlayerInfo()).collect(toList())); //GAME PLAYERS ARRAY WHO CONTAINS AN ARRAY[] OF PLAYER INFO OBJECT{} -> SEE GAME PLAYER CLASS.
+        /*dto.put("gamePlayers", getGamePlayers().stream().map(GamePlayer::getGamePlayerInfo).collect(toList())); //OTHER WAY */
         return dto;
+
     }
 
 
