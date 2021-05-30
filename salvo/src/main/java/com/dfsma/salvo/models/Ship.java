@@ -42,7 +42,7 @@ public class Ship {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public GamePlayer getGamePlayer() {
         return gamePlayer;
     }

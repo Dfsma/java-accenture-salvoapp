@@ -5,9 +5,7 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,12 +27,18 @@ public class GamePlayer {
     @JoinColumn(name = "game_id")
     private Game game;
 
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    private Set<Ship> ships;
+
+
     public GamePlayer() {
+        ships = new HashSet<Ship>();
     }
 
     public GamePlayer(Player player, Game game) {
         this.game = game;
         this.player = player;
+        ships = new HashSet<Ship>();
     }
 
     public long getId() {
@@ -63,6 +67,19 @@ public class GamePlayer {
         dto.put("player", getPlayer().getPlayerInfo()); //PLAYER OBJECT{} (getPlayer()) , WHO CONTAINS DATA FROM PLAYER CLASS LIKE(ID,EMAIL)
         return dto;
     }
+
+    public Set<Ship> getShips(){
+        return ships;
+    }
+    public void setShips(Set<Ship> ships) { this.ships = ships; }
+
+    public void addShip(Ship ship){
+        ship.setGamePlayer(this);
+        ships.add(ship);
+    }
+
+
+
 
 
 }
