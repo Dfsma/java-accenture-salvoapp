@@ -9,8 +9,12 @@ $(function() {
                                  +
                                      '<div class="card-body">'
                                      +
-                                         '<h5 id="gameId">' + 'Game Id: ' + game.id + '</h5>' +
-                                         '<p id="gameDate">' + 'Game Date: ' + new Date(game.created).toLocaleString() + '</p>'
+                                     '<div class="bg-secondary rounded">'
+                                     +
+                                         '<h5 id="gameId" class="m-2 pt-2 pb-2 text-light">' + 'Game Id: ' + game.id + '</h5>' +
+                                         '<p id="gameDate" class="m-2 pt-2 pb-2 text-light">' + 'Game Date: ' + new Date(game.created).toLocaleString() + '</p>'
+                                     +
+                                     '</div>'
                                          +
                                          '<div class="d-flex flex-fill justify-content-center">'
                                          +
@@ -24,7 +28,8 @@ $(function() {
                                              return `
                                                  <p> Player id: ${player.player.id}</p>
                                                  <p> Player email: ${player.player.email}</p>
-                                                     `
+                                                 <hr>
+                                                 `
                                              })
                                          +
                                          '</div>'

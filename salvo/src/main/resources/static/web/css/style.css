@@ -1,0 +1,20 @@
+body {
+
+}
+.navbar {
+    background-color: black;
+    border-top: 6px inset rgba(93,116,237,0.63);
+}
+.svg {
+   text-align: center;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+svg {
+  fill: cyan;
+}
+
+svg:hover {
+  fill: red;
+}

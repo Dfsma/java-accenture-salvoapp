@@ -8,6 +8,7 @@ import java.util.*;
 
 @RepositoryRestResource
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-    List<Player> findByEmail(String email);
+    List<Player> findById(String email);
+
 
 }
