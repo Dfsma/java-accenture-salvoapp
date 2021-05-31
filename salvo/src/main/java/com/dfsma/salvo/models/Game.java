@@ -24,7 +24,8 @@ public class Game {
 
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
-    Set<GamePlayer> gamePlayers;
+    private Set<GamePlayer> gamePlayers = new HashSet<>();
+
 
 
     public Game() {
@@ -56,24 +57,27 @@ public class Game {
         return gamePlayers.stream().map(sub -> sub.getPlayer()).collect(toList());
     }
 
-    public List<GamePlayer> getGamePlayers(){
-        return new ArrayList<>(this.gamePlayers);
-    }
+    public List<GamePlayer> getGamePlayers(){ return new ArrayList<>(this.gamePlayers); }
 
+    public List<Set<Ship>> getGameShips() {return gamePlayers.stream().map(gamePlayer -> gamePlayer.getShip()).collect(toList()); }
 
+    /*
     public Map<String, Object> getGameAndPlayersInfo(){ //PRINCIPAL DATA FOR RUTE /API/GAMES
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", getId()); //GAME ID
         dto.put("created", getDate()); //DATE CREATION
         dto.put("gamePlayers", getGamePlayers().stream().map(gamePlayer -> gamePlayer.getGamePlayerInfo()).collect(toList())); //GAME PLAYERS ARRAY WHO CONTAINS AN ARRAY[] OF PLAYER INFO OBJECT{} -> SEE GAME PLAYER CLASS.
-        /*dto.put("gamePlayers", getGamePlayers().stream().map(GamePlayer::getGamePlayerInfo).collect(toList())); //OTHER WAY */
+        /*dto.put("gamePlayers", getGamePlayers().stream().map(GamePlayer::getGamePlayerInfo).collect(toList())); //OTHER WAY
         return dto;
 
     }
+    */
 
 
     @Override
     public String toString() {
         return "Game" + id + "[" + date + "]";
     }
+
+
 }

@@ -4,7 +4,10 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Ship {
@@ -57,5 +60,12 @@ public class Ship {
 
     public void setShipLocations(List<String> shipLocations) {
         this.shipLocations = shipLocations;
+    }
+
+    public Map<String, Object> getShipsInfo(Ship ship){
+        Map<String, Object> dto = new HashMap<String, Object>();
+        dto.put("type", ship.getType());
+        dto.put("locations", ship.getShipLocations());
+        return dto;
     }
 }
