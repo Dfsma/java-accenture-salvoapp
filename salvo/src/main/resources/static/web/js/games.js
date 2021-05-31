@@ -30,7 +30,7 @@ $(function() {
                                                  <p> Player email: ${player.player.email}</p>
                                                  <hr>
                                                  `
-                                             }).join(",");
+                                             })
                                          +
                                          '</div>'
                                      +
