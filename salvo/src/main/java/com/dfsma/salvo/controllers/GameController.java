@@ -4,10 +4,9 @@ package com.dfsma.salvo.controllers;
 import com.dfsma.salvo.models.Game;
 import com.dfsma.salvo.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +27,13 @@ public class GameController {
     public List<Map<String, Object>> getGames() {
         return gameRepository.findAll().stream().map(game -> this.makeGamesDTO(game)).collect(Collectors.toList());
     }
+
+    @RequestMapping(path = "/game_view/{game_id}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getGameView(@PathVariable Long game_id){
+        Game gamePlayer = gameRepository.findById(game_id).orElse(null);
+        return new ResponseEntity<>(makeGamesDTO(gamePlayer), HttpStatus.ACCEPTED);
+    }
+
 
     public Map<String, Object> makeGamesDTO(Game game){
         Map<String, Object> dto = new HashMap<>();
