@@ -31,6 +31,10 @@ public class GamePlayer {
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     private Set<Ship> ships;
 
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    private Set<Salvo> salvos;
+
+
 
     public GamePlayer() {
 
@@ -58,7 +62,6 @@ public class GamePlayer {
     public Game getGame() {
         return game;
     }
-
     public void setGame(Game game) {
         this.game = game;
     }
@@ -66,15 +69,15 @@ public class GamePlayer {
     public Player getPlayer() {
         return player;
     }
-
-    public Set<Ship> getShip(){
-        return ships;
-    }
-
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    public Set<Ship> getShip(){ return ships; }
+    public void setShips(Set<Ship> ships) { this.ships = ships; }
+
+    public Set<Salvo> getSalvos() { return salvos; }
+    public void setSalvos(Set<Salvo> salvos) { this.salvos = salvos; }
 
     public Map<String, Object> getGamePlayerInfo(){
         Map<String, Object> dto = new HashMap<String, Object>();
@@ -87,17 +90,22 @@ public class GamePlayer {
         //Game game = gamePlayer.getGame();
         dto.put("type", ship.getType());
         dto.put("locations", ship.getShipLocations());
-
         return dto;
     }
 
 
 
-    public void setShips(Set<Ship> ships) { this.ships = ships; }
+    public List<Salvo> getSalvo(){return new ArrayList<>(this.salvos);}
+
 
     public void addShip(Ship ship){
         ship.setGamePlayer(this);
         ships.add(ship);
+    }
+
+    public void addSalvo(Salvo salvo){
+        salvo.setGamePlayer(this);
+        salvos.add(salvo);
     }
 
 

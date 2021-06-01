@@ -1,10 +1,7 @@
 package com.dfsma.salvo.controllers;
 
 
-import com.dfsma.salvo.models.Game;
-import com.dfsma.salvo.models.GamePlayer;
-import com.dfsma.salvo.models.Player;
-import com.dfsma.salvo.models.Ship;
+import com.dfsma.salvo.models.*;
 import com.dfsma.salvo.repositories.GamePlayerRepository;
 import com.dfsma.salvo.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.summarizingDouble;
@@ -38,12 +32,13 @@ public class GameController {
         return gameRepository.findAll().stream().map(game -> this.makeGameDTO(game)).collect(Collectors.toList());
     }
 
-
-    @RequestMapping(path = "/game_view/{gamePlayer_id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){
-        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);
-        return new ResponseEntity<>(makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
+    @RequestMapping(path = "/game_view/{gamePlayer_id}", method = RequestMethod.GET)  //@RequestMapping(path = "/game_view/{gamePlayer_id}", method = RequestMethod.GET)
+    public Map<String,Object> getGameView(@PathVariable Long gamePlayer_id){ //public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null); //GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);
+        return this.makeGamePlayerDTO(gamePlayer); //  return new ResponseEntity<>(makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
     }
+
+
 
 
     public Map<String, Object> makeGameDTO(Game game){
@@ -63,6 +58,7 @@ public class GameController {
         dto.put("created", gamePlayer.getJoined());
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayers -> gamePlayers.getGamePlayerInfo()).collect(toList()));
         dto.put("ships", ship.stream().map(ships -> ships.getShipsInfo(ships)));
+        dto.put("salvoes", gamePlayer.getGame().getGamePlayers().stream().map(gp -> gp.getSalvos().stream().map(salvo -> salvo.getSalvosInfo())).collect(toList()));
         return dto;
     }
 

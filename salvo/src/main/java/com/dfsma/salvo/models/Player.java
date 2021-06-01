@@ -60,7 +60,7 @@ public class Player {
     }
 
     public Map<String, Object> getPlayerInfo(){
-        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        Map<String, Object> dto = new HashMap<String, Object>();
         dto.put("id", getId()); //PLAYER ID
         dto.put("email", getEmail()); // PLAYER EMAIL
         return dto;

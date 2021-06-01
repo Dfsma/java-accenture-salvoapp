@@ -53,13 +53,9 @@ public class Game {
         gamePlayers.add(gamePlayer);
     }
 
-    public List<Player> getPlayers() {
-        return gamePlayers.stream().map(sub -> sub.getPlayer()).collect(toList());
-    }
 
     public List<GamePlayer> getGamePlayers(){ return new ArrayList<>(this.gamePlayers); }
 
-    public List<Set<Ship>> getGameShips() {return gamePlayers.stream().map(gamePlayer -> gamePlayer.getShip()).collect(toList()); }
 
     /*
     public Map<String, Object> getGameAndPlayersInfo(){ //PRINCIPAL DATA FOR RUTE /API/GAMES
