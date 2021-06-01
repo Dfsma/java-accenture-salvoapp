@@ -26,7 +26,7 @@ $(function() {
                         res.forEach(function(ele){
                             if((ele[0].localeCompare((y+9).toString(36).toUpperCase())==0)&&(ele[1].localeCompare(x.toString())==0)){
                                 item2.appendChild(document.createTextNode("F"));
-                                item2.style.backgroundColor = "#0000FF";
+                                item2.style.backgroundColor = "#AB2137";
                             }else{
                                 item2.appendChild(document.createTextNode(" "));
                             }

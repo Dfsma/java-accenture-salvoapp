@@ -56,7 +56,7 @@ public class SalvoApplication {
 			GamePlayer gamePlayer6 = new GamePlayer(player4, game3);
 
 			/*Game 1 -> Player1 Ships*/
-			Ship ship1 = new Ship("destroyer", gamePlayer1, Arrays.asList("H1","H2","H4"));
+			Ship ship1 = new Ship("destroyer", gamePlayer1, Arrays.asList("H1","H2","H3"));
 			Ship ship2 = new Ship("Submarine", gamePlayer1, Arrays.asList("E1","F1","G1"));
 			Ship ship3 = new Ship("Patrol Boat", gamePlayer1, Arrays.asList("B4","B5"));
 			/*Game 2 -> Player2 Ships*/

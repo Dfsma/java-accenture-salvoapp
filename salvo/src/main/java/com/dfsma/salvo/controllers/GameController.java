@@ -46,8 +46,6 @@ public class GameController {
     }
 
 
-
-
     public Map<String, Object> makeGameDTO(Game game){
         Map<String, Object> dto = new HashMap<>();
         dto.put("id", game.getId());
@@ -55,6 +53,7 @@ public class GameController {
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayer -> gamePlayer.getGamePlayerInfo()).collect(toList()));
         return dto;
     }
+
     public Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer){
         Map<String, Object> dto = new HashMap<>();
         Game game = gamePlayer.getGame();
