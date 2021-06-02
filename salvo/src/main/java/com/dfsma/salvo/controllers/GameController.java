@@ -42,7 +42,7 @@ public class GameController {
 
 
     public Map<String, Object> makeGameDTO(Game game){
-        Map<String, Object> dto = new HashMap<>();
+        Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", game.getId());
         dto.put("created", game.getDate());
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayer -> gamePlayer.getGamePlayerInfo()).collect(toList()));
@@ -50,7 +50,7 @@ public class GameController {
     }
 
     public Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer){
-        Map<String, Object> dto = new HashMap<>();
+        Map<String, Object> dto = new LinkedHashMap<>();
         Game game = gamePlayer.getGame();
         Set<Ship> ship = gamePlayer.getShip();
 
@@ -58,7 +58,8 @@ public class GameController {
         dto.put("created", gamePlayer.getJoined());
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayers -> gamePlayers.getGamePlayerInfo()).collect(toList()));
         dto.put("ships", ship.stream().map(ships -> ships.getShipsInfo(ships)));
-        dto.put("salvoes", gamePlayer.getGame().getGamePlayers().stream().map(gp -> gp.getSalvos().stream().map(salvo -> salvo.getSalvosInfo())).collect(toList()));
+        dto.put("salvoes", gamePlayer.getGame().getGamePlayers().stream().flatMap(gp -> gp.getSalvos().stream().map(salvo -> salvo.getSalvosInfo())).collect(toList()));
+
         return dto;
     }
 

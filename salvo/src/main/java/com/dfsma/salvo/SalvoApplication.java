@@ -63,7 +63,7 @@ public class SalvoApplication {
 			Salvo salvo2 = new Salvo(2, gamePlayer1, Arrays.asList("H5","A2"));
 
 			Salvo salvo3 = new Salvo(1, gamePlayer2, Arrays.asList("B6","B7","B8"));
-			Salvo salvo4 = new Salvo(2, gamePlayer2, Arrays.asList("H6","A5"));
+			Salvo salvo4 = new Salvo(2, gamePlayer2, Arrays.asList("H1","H2"));
 
 			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
 			repoGame.saveAll(Arrays.asList(game1,game2, game3));
