@@ -25,12 +25,16 @@ public class Player {
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers = new HashSet<>();
 
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    private Set<Score> scores = new HashSet<>();
 
     public Player() {}
 
     public Player(String userName, String email) {
         this.userName = userName;
         this.email = email;
+        this.gamePlayers = new HashSet<>();
+        this.scores = new HashSet<>();
     }
 
     /*Getter y Setters*/
@@ -53,10 +57,30 @@ public class Player {
         this.email = email;
     }
 
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
+
+    public Set<Score> getScore() {
+        return scores;
+    }
+
+    public void setScores(Set<Score> scores) {
+        this.scores = scores;
+    }
+
     public void addGamePlayer(GamePlayer gamePlayer){
         gamePlayer.setPlayer(this);
         gamePlayers.add(gamePlayer);
 
+    }
+    public void addScore(Score score){
+        score.setPlayer(this);
+        scores.add(score);
     }
 
     public Map<String, Object> getPlayerInfo(){
@@ -65,6 +89,12 @@ public class Player {
         dto.put("email", getEmail()); // PLAYER EMAIL
         return dto;
     }
+
+    public Score getScorePlayer(Game game){
+        return scores.stream().filter(s -> s.getGame() == game).findFirst().orElse(null);
+    }
+
+
 
 
     @Override

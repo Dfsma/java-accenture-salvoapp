@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class Salvo {
 
 
     public Map<String, Object> getSalvosInfo(Salvo salvo){
-        Map<String, Object> dto = new HashMap<>();
+        Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", salvo.getTurn());
         dto.put("player", salvo.getGamePlayer().getPlayer().getId());
         dto.put("locations", salvo.getLocations());
@@ -77,7 +78,7 @@ public class Salvo {
     }
 
     public Map<String, Object> getSalvosInfo(){
-        Map<java.lang.String, java.lang.Object> dto = new HashMap<>();
+        Map<java.lang.String, java.lang.Object> dto = new LinkedHashMap<>();
         dto.put("turn", getTurn());
         dto.put("player", getGamePlayer().getPlayer().getId());
         dto.put("locations", getLocations());

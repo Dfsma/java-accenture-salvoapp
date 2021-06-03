@@ -22,7 +22,12 @@ public class SalvoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository repoPlayer, GamePlayerRepository repoGamePlayer, GameRepository repoGame, ShipRepository repoShip, SalvoRepository repoSalvo){
+	public CommandLineRunner initData(PlayerRepository repoPlayer,
+									  GamePlayerRepository repoGamePlayer,
+									  GameRepository repoGame,
+									  ShipRepository repoShip,
+									  SalvoRepository repoSalvo,
+									  ScoreRepository repoScore ){
 		return (args) -> {
 
 			Player player1 = new Player("Diego", "diego@gmail.com");
@@ -65,11 +70,21 @@ public class SalvoApplication {
 			Salvo salvo3 = new Salvo(1, gamePlayer2, Arrays.asList("B6","B7","B8"));
 			Salvo salvo4 = new Salvo(2, gamePlayer2, Arrays.asList("H1","H2"));
 
+			Score score1 = gamePlayer1.getScore(1);
+			Score score2 = gamePlayer2.getScore(1);
+
+			Score score3 = gamePlayer3.getScore(1);
+			Score score4 = gamePlayer4.getScore(0);
+
+			Score score5 = gamePlayer5.getScore(0.5);
+			Score score6 = gamePlayer6.getScore(0.0);
+
 			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
 			repoGame.saveAll(Arrays.asList(game1,game2, game3));
 			repoGamePlayer.saveAll(Arrays.asList(gamePlayer1,gamePlayer2, gamePlayer3, gamePlayer4, gamePlayer5, gamePlayer6));
 			repoShip.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5,ship6));
 			repoSalvo.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4));
+			repoScore.saveAll(Arrays.asList(score1, score2, score3, score4, score5, score6));
 
 
 		};

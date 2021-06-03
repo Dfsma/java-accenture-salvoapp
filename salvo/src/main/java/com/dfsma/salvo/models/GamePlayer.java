@@ -79,23 +79,35 @@ public class GamePlayer {
     public Set<Salvo> getSalvos() { return salvos; }
     public void setSalvos(Set<Salvo> salvos) { this.salvos = salvos; }
 
+
     public Map<String, Object> getGamePlayerInfo(){
-        Map<String, Object> dto = new HashMap<String, Object>();
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        Score s = getPlayer().getScorePlayer(getGame());
         dto.put("id", getId());
-        dto.put("player", getPlayer().getPlayerInfo()); //PLAYER OBJECT{} (getPlayer()) , WHO CONTAINS DATA FROM PLAYER CLASS LIKE(ID,EMAIL)
-        return dto;
-    }
-    public Map<String, Object> getGamePlayerShipsInfo(Ship ship){
-        Map<String, Object> dto = new HashMap<>();
-        //Game game = gamePlayer.getGame();
-        dto.put("type", ship.getType());
-        dto.put("locations", ship.getShipLocations());
+        dto.put("player", getPlayer().getPlayerInfo());
+        if ( s != null){
+            dto.put("score", s.getScore());
+        }else{
+            dto.put("score", 0);
+        }
         return dto;
     }
 
+    public Map<String, Object> getPlayerScoreInfo(){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", getId());
+        dto.put("player", getPlayer().getPlayerInfo());
+        dto.put("score", getPlayer().getScorePlayer(getGame()).getScore());
+        return dto;
+    }
 
 
     public List<Salvo> getSalvo(){return new ArrayList<>(this.salvos);}
+
+    public Score getScore(double score){
+        return new Score(score, player, game);
+    }
+
 
 
     public void addShip(Ship ship){
@@ -107,7 +119,5 @@ public class GamePlayer {
         salvo.setGamePlayer(this);
         salvos.add(salvo);
     }
-
-
 
 }

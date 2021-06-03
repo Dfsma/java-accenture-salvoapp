@@ -1,20 +1,54 @@
-.ship-piece{
+
+
+#divPlayerInfo{
+    margin-top: 100px;
+}
+
+   #playerInfo{
+   color:white;
+   font-family: "Lucida Console", "Courier New", monospace;
+    text-transform: uppercase;
+   }
+
+  h2 {
+    color: whitesmoke;
+  }
+  td{
+    table-layout: fixed;
+    width: 2em;
+  }
+  th{
+    color: whitesmoke;
+  }
+  .ship-piece{
     background-color: mediumpurple;
-}
+  }
 
-.ship-piece-hited{
+  .ship-piece-hited{
     background-color: darkmagenta;
-}
+  }
 
-.salvo{
+  .salvo{
 
-}
+  }
 
-.salvo-piece{
+  .salvo-piece{
     background-color: crimson;
-}
+  }
+  table {
+    border: 2px solid #00e500;
+    margin: 0 auto;
 
-table,
-td {
-    border: 1px solid #333;
-}
+
+  }
+
+  table,
+  td {
+
+    height: 2em;
+    border: 1px solid rgba(0,229,0, .3);
+    text-align: center;
+    cursor: pointer;
+    color: whitesmoke;
+
+  }
