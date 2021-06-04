@@ -31,6 +31,10 @@ public class GamePlayer {
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     private Set<Ship> ships;
 
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    private Set<Salvo> salvos;
+
+
 
     public GamePlayer() {
 
@@ -58,7 +62,6 @@ public class GamePlayer {
     public Game getGame() {
         return game;
     }
-
     public void setGame(Game game) {
         this.game = game;
     }
@@ -66,40 +69,52 @@ public class GamePlayer {
     public Player getPlayer() {
         return player;
     }
-
-    public Set<Ship> getShip(){
-        return ships;
-    }
-
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    public Set<Ship> getShip(){ return ships; }
+    public void setShips(Set<Ship> ships) { this.ships = ships; }
+
+    public Set<Salvo> getSalvos() { return salvos; }
+    public void setSalvos(Set<Salvo> salvos) { this.salvos = salvos; }
+
 
     public Map<String, Object> getGamePlayerInfo(){
-        Map<String, Object> dto = new HashMap<String, Object>();
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        Score scr = getPlayer().getScorePlayer(getGame());
         dto.put("id", getId());
-        dto.put("player", getPlayer().getPlayerInfo()); //PLAYER OBJECT{} (getPlayer()) , WHO CONTAINS DATA FROM PLAYER CLASS LIKE(ID,EMAIL)
-        return dto;
-    }
-    public Map<String, Object> getGamePlayerShipsInfo(Ship ship){
-        Map<String, Object> dto = new HashMap<>();
-        //Game game = gamePlayer.getGame();
-        dto.put("type", ship.getType());
-        dto.put("locations", ship.getShipLocations());
-
+        dto.put("player", getPlayer().getPlayerInfo());
+        if ( src == null) {
+            dto.put("score", 0);
+        }
+        dto.put("score", scr.getScore());
         return dto;
     }
 
+    public Map<String, Object> getPlayerScoreInfo(){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", getId());
+        dto.put("player", getPlayer().getPlayerInfo());
+        dto.put("score", getPlayer().getScorePlayer(getGame()).getScore());
+        return dto;
+    }
 
 
-    public void setShips(Set<Ship> ships) { this.ships = ships; }
+    public List<Salvo> getSalvo(){return new ArrayList<>(this.salvos);}
+
+    public Score getScore(double score){
+        return new Score(score, player, game);
+    }
 
     public void addShip(Ship ship){
         ship.setGamePlayer(this);
         ships.add(ship);
     }
 
-
+    public void addSalvo(Salvo salvo){
+        salvo.setGamePlayer(this);
+        salvos.add(salvo);
+    }
 
 }
