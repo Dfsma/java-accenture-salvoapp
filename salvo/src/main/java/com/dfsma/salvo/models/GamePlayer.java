@@ -85,10 +85,11 @@ public class GamePlayer {
         Score scr = getPlayer().getScorePlayer(getGame());
         dto.put("id", getId());
         dto.put("player", getPlayer().getPlayerInfo());
-        if ( src == null) {
+        if ( scr == null) {
             dto.put("score", 0);
+        }else{
+            dto.put("score", scr.getScore());
         }
-        dto.put("score", scr.getScore());
         return dto;
     }
 
