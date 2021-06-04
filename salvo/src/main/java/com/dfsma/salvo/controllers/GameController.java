@@ -43,15 +43,6 @@ public class GameController {
     }
 
 
-
-
-
-
-
-
-
-
-
     @GetMapping("/game_view/{gamePlayer_id}")  //@RequestMapping(path = "/game_view/{gamePlayer_id}", method = RequestMethod.GET)
     public Map<String,Object> getGameView(@PathVariable Long gamePlayer_id){ //public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null); //GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);

@@ -82,14 +82,13 @@ public class GamePlayer {
 
     public Map<String, Object> getGamePlayerInfo(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        Score s = getPlayer().getScorePlayer(getGame());
+        Score scr = getPlayer().getScorePlayer(getGame());
         dto.put("id", getId());
         dto.put("player", getPlayer().getPlayerInfo());
-        if ( s != null){
-            dto.put("score", s.getScore());
-        }else{
+        if ( src == null) {
             dto.put("score", 0);
         }
+        dto.put("score", scr.getScore());
         return dto;
     }
 
@@ -107,8 +106,6 @@ public class GamePlayer {
     public Score getScore(double score){
         return new Score(score, player, game);
     }
-
-
 
     public void addShip(Ship ship){
         ship.setGamePlayer(this);
