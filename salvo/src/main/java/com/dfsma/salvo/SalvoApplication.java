@@ -142,9 +142,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/").permitAll()
-				.antMatchers("/api/**").permitAll()
-				.antMatchers("/web/**").permitAll();
+				.antMatchers("/web/**").permitAll()
+				.antMatchers("/api/**").permitAll();
+
 
 		http.formLogin()
 				.usernameParameter("email")

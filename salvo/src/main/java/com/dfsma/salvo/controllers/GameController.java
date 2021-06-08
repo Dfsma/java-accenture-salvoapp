@@ -36,13 +36,7 @@ public class GameController {
     @GetMapping("/games")
     public Map<String, Object> getGames(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        if (isGuest(authentication)) {
-            dto.put("player", "Guest");
-        } else {
-            Player player = playerRepository.findByEmail(authentication.getName());
-            dto.put("player", makePlayersDTO(player));
-        }
-
+        dto.put("player", !isGuest(authentication) ? makePlayersDTO(playerRepository.findByEmail(authentication.getName())) : "Guest");
         dto.put("games", gameRepository.findAll().stream().map(game -> this.makeGameDTO(game)).collect(Collectors.toList()));
         return dto;
     }

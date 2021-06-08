@@ -61,7 +61,7 @@
         </a>
         <div class="row">
             <div class="col">
-                <!-- TODO: Link to LogIn -->
+                <button id="logout-form" type="button" class="btn btn-sm btn-primary">Logout</button>
             </div>
         </div>
     </div>
@@ -70,6 +70,21 @@
 <!-- CONTAINER -->
 
 <div class="container mt-4">
+        <div id="loginBlock" class="">
+            <div class="col-sm-12">
+                <div class="row">
+
+
+                        <form class="form-inline" id="login-form" onsubmit="return false">
+                            <label for="username">Name:</label><input class="form-control" id="username" type="email" name="username" required>
+                            <label for="password">Password:</label><input class="form-control" id="password" type="password" name="password" required>
+                            <input type="submit" class="form-control submitbutton btn btn-info" name="login" value="Login" />
+                        </form>
+
+
+                </div>
+            </div>
+        </div>
     <div id="cards" class="row">
 
     </div>

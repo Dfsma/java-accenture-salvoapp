@@ -1,9 +1,56 @@
 let playersArray;
 let gamesData;
+let submitButton;
 
 $(function() {
-    loadData()
+    $('.submitbutton').click(function () {
+        submitButton = $(this).attr('name')
+    });
+
 });
+$('#login-form').on('submit', function (event) {
+    event.preventDefault();
+    if (submitButton == "login") {
+        $.post("/api/login",
+            { name: $("#username").val(),
+                pwd: $("#password").val() })
+            .done(function() {
+                console.log("login ok");
+                $('#loginSuccess').show( "slow" ).delay(2000).hide( "slow" );
+                // $("#username").val("");
+                $("#password").val("");
+                updateJson();
+                $("#createGameForm").show();
+                $("#registerForm").hide();
+
+            })
+            .fail(function() {
+                console.log("login failed");
+                $('#loginFailed').show( "slow" ).delay(2000).hide( "slow" );
+                $("#username").val("");
+                $("#password").val("");
+                $("#username").focus();
+                // $('#loginFailed').hide( "slow" );
+            })
+            .always(function() {
+            });
+    }
+});
+$('#logout-form').on('submit', function (event) {
+        event.preventDefault();
+        $.post("/api/logout")
+            .done(function () {
+                console.log("logout ok");
+                $('#logoutSuccess').show("slow").delay(2000).hide("slow");
+                updateJson();
+            })
+            .fail(function () {
+                console.log("logout fails");
+            })
+            .always(function () {
+
+            });
+    });
 
     function updateView(data) {
         let html = data.games.map((game) => {
@@ -141,8 +188,6 @@ $(function() {
       }
     }
 
-
-
     function loadData() {
         $.get("/api/games")
             .done(function(data) {
@@ -157,4 +202,7 @@ $(function() {
               alert( "Failed: " + textStatus );
             });
     }
+
+
+
 
