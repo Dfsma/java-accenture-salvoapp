@@ -5,6 +5,7 @@ import com.dfsma.salvo.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,6 +21,25 @@ public class PlayerController {
 
     @Autowired
     PlayerRepository playerRepository;
+
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @PostMapping("/players")
+    public ResponseEntity<Object> register(@RequestParam String name, @RequestParam String email, @RequestParam String password ){
+
+        if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
+            return new ResponseEntity<>("Missing Data", HttpStatus.FORBIDDEN);
+        }
+
+        if (playerRepository.findByEmail(email) != null) {
+            return new ResponseEntity<>("Email already in use", HttpStatus.FORBIDDEN);
+        }
+
+        playerRepository.save(new Player(name, email, passwordEncoder.encode(password)));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
 
     @RequestMapping("/players")

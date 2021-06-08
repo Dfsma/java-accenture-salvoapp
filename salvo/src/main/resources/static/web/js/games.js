@@ -6,7 +6,7 @@ $(function() {
 });
 
     function updateView(data) {
-        let html = data.map((game) => {
+        let html = data.games.map((game) => {
          return  '<div class="col-12 mb-2 col-md-4 mt-4">'
                              +
                                  '<div class="card">'
@@ -146,7 +146,7 @@ $(function() {
     function loadData() {
         $.get("/api/games")
             .done(function(data) {
-              updateViewGames(data);
+              updateView(data);
               gamesData = data.games;
               playersArray  =   getPlayers(gamesData);
               playersArray  =   addScoresToPlayersArray(playersArray,gamesData);

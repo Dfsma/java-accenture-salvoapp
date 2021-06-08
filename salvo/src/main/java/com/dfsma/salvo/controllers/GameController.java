@@ -2,17 +2,21 @@ package com.dfsma.salvo.controllers;
 
 
 import com.dfsma.salvo.models.*;
-import com.dfsma.salvo.repositories.GamePlayerRepository;
+
 import com.dfsma.salvo.repositories.GameRepository;
+import com.dfsma.salvo.repositories.PlayerRepository;
+import com.dfsma.salvo.service.GamePlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.summarizingDouble;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -24,11 +28,21 @@ public class GameController {
     GameRepository gameRepository;
 
     @Autowired
-    GamePlayerRepository gamePlayerRepository;
+    GamePlayerService gamePlayerService;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     @GetMapping("/games")
-    public Map<String, Object> getGames() {
+    public Map<String, Object> getGames(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
+        if (isGuest(authentication)) {
+            dto.put("player", "Guest");
+        } else {
+            Player player = playerRepository.findByEmail(authentication.getName());
+            dto.put("player", makePlayersDTO(player));
+        }
+
         dto.put("games", gameRepository.findAll().stream().map(game -> this.makeGameDTO(game)).collect(Collectors.toList()));
         return dto;
     }
@@ -38,15 +52,19 @@ public class GameController {
         dto.put("id", game.getId());
         dto.put("created", game.getDate());
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayer -> gamePlayer.getGamePlayerInfo()).collect(toList()));
-        dto.put("scores", game.getScores().stream().map(Score::getInfo).collect(toList()));
+        dto.put("scores", game.getScores().stream().map(score -> score.getScoresInfo()).collect(toList()));
         return dto;
     }
 
 
     @GetMapping("/game_view/{gamePlayer_id}")  //@RequestMapping(path = "/game_view/{gamePlayer_id}", method = RequestMethod.GET)
-    public Map<String,Object> getGameView(@PathVariable Long gamePlayer_id){ //public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){
-        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null); //GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);
-        return this.makeGamePlayerDTO(gamePlayer); //  return new ResponseEntity<>(makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
+    public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){ //public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){
+        try{
+            GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id); //GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);
+            return ResponseEntity.ok(this.makeGamePlayerDTO(gamePlayer));
+        }catch (Exception exception){
+            return  new ResponseEntity<>("Error: El GamePlayer Id: " + gamePlayer_id + " no existe.",HttpStatus.BAD_REQUEST);
+        }
     }
 
 
@@ -64,8 +82,19 @@ public class GameController {
     }
 
 
+    public Map<String, Object> makePlayersDTO(Player player){
 
+        Map<String, Object> dto = new HashMap<>();
+        dto.put("id", player.getId());
+        dto.put("userName", player.getUserName());
+        dto.put("email", player.getEmail());
 
+        return dto;
+    }
+
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
+    }
 
 
 
