@@ -2,12 +2,8 @@ package com.dfsma.salvo.models;
 
 
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.*;
-
-import static java.util.stream.Collectors.toList;
 
 @Entity
 public class GamePlayer {
@@ -33,8 +29,6 @@ public class GamePlayer {
 
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     private Set<Salvo> salvos;
-
-
 
     public GamePlayer() {
 
@@ -85,10 +79,11 @@ public class GamePlayer {
         Score scr = getPlayer().getScorePlayer(getGame());
         dto.put("id", getId());
         dto.put("player", getPlayer().getPlayerInfo());
-        if ( src == null) {
-            dto.put("score", 0);
+        if ( scr == null) {
+            dto.put("score", null);
+        }else{
+            dto.put("score", scr.getScore());
         }
-        dto.put("score", scr.getScore());
         return dto;
     }
 

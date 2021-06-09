@@ -1,25 +1,24 @@
 package com.dfsma.salvo.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
 
+import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
+
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "gamePlayers"})
 public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private String userName;
-    private String email;
 
+
+    private String email;
+    private String password;
 
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
@@ -30,9 +29,10 @@ public class Player {
 
     public Player() {}
 
-    public Player(String userName, String email) {
-        this.userName = userName;
+    public Player(String email, String password) {
+
         this.email = email;
+        this.password = password;
         this.gamePlayers = new HashSet<>();
         this.scores = new HashSet<>();
     }
@@ -41,13 +41,9 @@ public class Player {
     public long getId() {
         return id;
     }
-    public String getUserName() {
-        return userName;
-    }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+
+
 
     public String getEmail() {
         return email;
@@ -55,6 +51,14 @@ public class Player {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<GamePlayer> getGamePlayers() {
@@ -85,21 +89,15 @@ public class Player {
 
     public Map<String, Object> getPlayerInfo(){
         Map<String, Object> dto = new HashMap<String, Object>();
-        dto.put("id", getId()); //PLAYER ID
-        dto.put("email", getEmail()); // PLAYER EMAIL
+        dto.put("id", getId());
+        dto.put("email", getEmail());
         return dto;
     }
 
     public Score getScorePlayer(Game game){
-        return scores.stream().filter(s -> s.getGame() == game).findFirst().orElse(null);
+        return scores.stream().filter(score -> score.getGame() == game).findFirst().orElse(null);
     }
 
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
+
 }
