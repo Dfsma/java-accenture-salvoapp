@@ -107,11 +107,11 @@ $('#logout-form').on('submit', function (event) {
             });
     });
 
-$('#createGame').on('submit', function (event) {
+$('#createGame').click(function (event) {
     event.preventDefault();
     $.post("/api/games")
         .done(function (data) {
-            console.log(data);
+            console.log("Miren mi juego ",data);
             console.log("game created");
             gameViewUrl = "/web/game.html?gp=" + data.gpid;
             $('#gameCreatedSuccess').show("slow").delay(2000).hide("slow");
@@ -127,11 +127,8 @@ $('#createGame').on('submit', function (event) {
             $('#errorSignup').show( "slow" ).delay(4000).hide( "slow" );
 
         })
-        .always(function () {
 
-        });
 });
-
 
 function fetchJson(url) {
         return fetch(url, {
@@ -230,7 +227,7 @@ function showGamesTable(gamesData) {
             .done(function (data) {
                 console.log(data);
                 console.log("game joined");
-                gameViewUrl = "/web/game_2.html?gp=" + data.gpid;
+                gameViewUrl = "/web/game.html?gp=" + data.gpid;
                 $('#gameJoinedSuccess').show("slow").delay(2000).hide("slow");
                 setTimeout(
                    function()

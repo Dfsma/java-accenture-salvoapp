@@ -1,3 +1,10 @@
+/*
+SALVO GAME 'Game View' JS Code
+developed by Berenguer Pou / Ubiqum Barcelona (berenguer@ubiqum.com)
+Last update: June, 11, 2018
+*/
+
+
 $(function () {
   loadData();
 });

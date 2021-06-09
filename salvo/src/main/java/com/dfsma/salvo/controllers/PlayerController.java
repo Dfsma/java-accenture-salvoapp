@@ -42,12 +42,12 @@ public class PlayerController {
     }
 
 
-    @RequestMapping("/players")
+    @GetMapping("/players")
     public List<Map<String, Object>> getPlayers() {
         return playerRepository.findAll().stream().map(player -> this.makePlayersDTO(player)).collect(Collectors.toList());
     }
 
-    @RequestMapping(path = "/players/{player_id}", method = RequestMethod.GET)
+    @GetMapping(path = "/players/{player_id}")
     public ResponseEntity<Object> getPlayer(@PathVariable Long player_id){
         Player player = playerRepository.findById(player_id).orElse(null);
         return new ResponseEntity<>(makePlayersDTO(player), HttpStatus.ACCEPTED);

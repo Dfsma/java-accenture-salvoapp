@@ -3,6 +3,7 @@ package com.dfsma.salvo.models;
 
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -13,7 +14,7 @@ public class GamePlayer {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private Date joined;
+    private LocalDateTime joined;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id")
@@ -34,8 +35,8 @@ public class GamePlayer {
 
     }
 
-    public GamePlayer(Player player, Game game) {
-        this.joined = new Date();
+    public GamePlayer(Player player, Game game , LocalDateTime date) {
+        this.joined = date;
         this.game = game;
         this.player = player;
         ships = new HashSet<Ship>();
@@ -45,11 +46,11 @@ public class GamePlayer {
         return id;
     }
 
-    public Date getJoined() {
+    public LocalDateTime getJoined() {
         return joined;
     }
 
-    public void setJoined(Date joined) {
+    public void setJoined(LocalDateTime joined) {
         this.joined = joined;
     }
 

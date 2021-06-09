@@ -16,7 +16,7 @@ public class Game {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private LocalDateTime date;
+    private LocalDateTime date = LocalDateTime.now();
 
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
@@ -24,7 +24,6 @@ public class Game {
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<Score> scores = new HashSet<>();
-
 
 
     public Game() {

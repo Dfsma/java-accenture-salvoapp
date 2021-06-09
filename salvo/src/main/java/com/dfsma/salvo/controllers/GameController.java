@@ -3,20 +3,23 @@ package com.dfsma.salvo.controllers;
 
 import com.dfsma.salvo.models.*;
 
+import com.dfsma.salvo.repositories.GamePlayerRepository;
 import com.dfsma.salvo.repositories.GameRepository;
 import com.dfsma.salvo.repositories.PlayerRepository;
 import com.dfsma.salvo.service.GamePlayerService;
+import com.dfsma.salvo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -28,15 +31,103 @@ public class GameController {
     GameRepository gameRepository;
 
     @Autowired
-    GamePlayerService gamePlayerService;
+    PlayerRepository playerRepository;
 
     @Autowired
-    PlayerRepository playerRepository;
+    GamePlayerRepository gamePlayerRepository;
+
+    @Autowired
+    GamePlayerService gamePlayerService;
+
+
+
+    @PostMapping("/games")
+    public ResponseEntity<Object> createGame(Authentication authentication){
+        if(Util.isGuest(authentication)){
+            return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
+        }
+
+        Player player = playerRepository.findByEmail(authentication.getName());
+        if(player == null) {
+            return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
+        }
+
+        Game game = new Game();
+        gameRepository.save(game);
+
+        GamePlayer gamePlayer = new GamePlayer(player, game, LocalDateTime.now());
+        gamePlayerRepository.save(gamePlayer);
+
+        return new ResponseEntity<>(Util.makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/game_view/{gamePlayer_id}")
+    public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id, Authentication authentication){
+        try{
+
+            Player player = playerRepository.findByEmail(authentication.getName());
+
+
+            GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id);
+
+            if(gamePlayer.getPlayer().getId() == player.getId()){
+                return new ResponseEntity<>(this.makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
+            }else{
+                return new ResponseEntity<>(Util.makeMap("error", "You´re not in this game"), HttpStatus.NOT_FOUND);
+            }
+
+
+
+        }catch (Exception exception){
+            return  new ResponseEntity<>("Error: El GamePlayer Id: " + gamePlayer_id + " no existe.",HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/game/{game_id}/players")
+    public ResponseEntity<Map<String, Object>> joinGame(@PathVariable long game_id, Authentication authentication){
+        if(Util.isGuest(authentication)){
+            return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
+        }
+
+        Player player = playerRepository.findByEmail(authentication.getName());
+        if(player == null) {
+            return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
+        }
+
+        Game game = gameRepository.findById(game_id).orElse(null);
+        if(game == null){
+            return new ResponseEntity<>(Util.makeMap("error", "Game" + game_id + "Not Found"), HttpStatus.NOT_FOUND);
+        }
+
+        if(game.getGamePlayers().contains(player)){
+            return new ResponseEntity<>(Util.makeMap("error", "You're already in the game"), HttpStatus.FORBIDDEN);
+        }
+
+
+        if(game.getGamePlayers().size() >= 2){
+            return new ResponseEntity<>(Util.makeMap("error", "The game is full"), HttpStatus.FORBIDDEN);
+        }
+
+
+
+
+        GamePlayer gamePlayer = new GamePlayer(player, game, LocalDateTime.now());
+        if(gamePlayer == null){
+            return new ResponseEntity<>(Util.makeMap("error", "Couldn't create GamePlayer"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        gamePlayerRepository.save(gamePlayer);
+        return new ResponseEntity<>(Util.makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
+
+    }
+
+
+
 
     @GetMapping("/games")
     public Map<String, Object> getGames(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("player", isGuest(authentication) ? "Guest" : makePlayersDTO(playerRepository.findByEmail(authentication.getName())));
+        dto.put("player", Util.isGuest(authentication) ? "Guest" : makePlayersDTO(playerRepository.findByEmail(authentication.getName())));
         dto.put("games", gameRepository.findAll().stream().map(game -> this.makeGameDTO(game)).collect(Collectors.toList()));
         return dto;
     }
@@ -48,17 +139,6 @@ public class GameController {
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayer -> gamePlayer.getGamePlayerInfo()).collect(toList()));
         dto.put("scores", game.getScores().stream().map(score -> score.getScoresInfo()).collect(toList()));
         return dto;
-    }
-
-
-    @GetMapping("/game_view/{gamePlayer_id}")  //@RequestMapping(path = "/game_view/{gamePlayer_id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){ //public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id){
-        try{
-            GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id); //GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);
-            return ResponseEntity.ok(this.makeGamePlayerDTO(gamePlayer));
-        }catch (Exception exception){
-            return  new ResponseEntity<>("Error: El GamePlayer Id: " + gamePlayer_id + " no existe.",HttpStatus.BAD_REQUEST);
-        }
     }
 
 
@@ -85,9 +165,6 @@ public class GameController {
         return dto;
     }
 
-    private boolean isGuest(Authentication authentication) {
-        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
-    }
 
 
 
