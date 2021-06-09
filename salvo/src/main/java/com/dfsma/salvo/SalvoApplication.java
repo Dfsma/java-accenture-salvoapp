@@ -63,26 +63,26 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Game game3 = new Game(date);
 
 
+			LocalDateTime date2 = LocalDateTime.now();
+			GamePlayer gamePlayer1 = new GamePlayer(player1, game1, date2);
+			GamePlayer gamePlayer2 = new GamePlayer(player2, game1, date2);
 
-			GamePlayer gamePlayer1 = new GamePlayer(player1, game1);
-			GamePlayer gamePlayer2 = new GamePlayer(player2, game1);
+			GamePlayer gamePlayer3 = new GamePlayer(player3, game2, date2);
+			GamePlayer gamePlayer4 = new GamePlayer(player4, game2, date2);
 
-			GamePlayer gamePlayer3 = new GamePlayer(player3, game2);
-			GamePlayer gamePlayer4 = new GamePlayer(player4, game2);
+			GamePlayer gamePlayer5 = new GamePlayer(player1, game3, date2);
+			GamePlayer gamePlayer6 = new GamePlayer(player4, game3, date2);
 
-			GamePlayer gamePlayer5 = new GamePlayer(player1, game3);
-			GamePlayer gamePlayer6 = new GamePlayer(player4, game3);
 
-			/*Game 1 -> Player1 Ships*/
 			Ship ship1 = new Ship("destroyer", gamePlayer1, Arrays.asList("H1","H2","H3"));
 			Ship ship2 = new Ship("Submarine", gamePlayer1, Arrays.asList("E1","F1","G1"));
 			Ship ship3 = new Ship("Patrol Boat", gamePlayer1, Arrays.asList("B4","B5"));
-			/*Game 2 -> Player2 Ships*/
+
 			Ship ship4 = new Ship("destroyer", gamePlayer2, Arrays.asList("H3","H4","H5"));
 			Ship ship5 = new Ship("Submarine", gamePlayer2, Arrays.asList("E4","F4","G4"));
 			Ship ship6 = new Ship("Patrol Boat", gamePlayer2, Arrays.asList("B6","B7"));
 
-			/*Game 1 -> Player1 & Player2 Salvos*/
+
 			Salvo salvo1 = new Salvo(1, gamePlayer1, Arrays.asList("H4","H5","H6"));
 			Salvo salvo2 = new Salvo(2, gamePlayer1, Arrays.asList("H5","A2"));
 
@@ -104,6 +104,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			repoShip.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5,ship6));
 			repoSalvo.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4));
 			repoScore.saveAll(Arrays.asList(score1, score2, score3, score4, score5));
+
 
 
 		};
@@ -144,7 +145,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/web/game.html").hasAuthority("USER")
 				.antMatchers("/web/**").permitAll()
-				.antMatchers("/api/**").permitAll();
+				.antMatchers("/api/**").permitAll()
+				.antMatchers("/h2-console/").permitAll().anyRequest().authenticated()
+				.and().csrf().ignoringAntMatchers("/h2-console/")
+				.and().headers().frameOptions().sameOrigin();
 
 		http.formLogin()
 				.usernameParameter("email")
