@@ -49,10 +49,10 @@ public class SalvoApplication extends SpringBootServletInitializer {
 									  ScoreRepository repoScore ){
 		return (args) -> {
 
-			Player player1 = new Player("Diego", "diego@gmail.com", passwordEncoder().encode("diego123"));
-			Player player2 = new Player("Juan", "juan@gmail.com", passwordEncoder().encode("juan123"));
-			Player player3 = new Player("Erika", "erika@gmail.com", passwordEncoder().encode("erika123"));
-			Player player4 = new Player("Emilia","emilia@gmail.com", passwordEncoder().encode("emilia123"));
+			Player player1 = new Player("diego@gmail.com", passwordEncoder().encode("diego123"));
+			Player player2 = new Player("juan@gmail.com", passwordEncoder().encode("juan123"));
+			Player player3 = new Player("erika@gmail.com", passwordEncoder().encode("erika123"));
+			Player player4 = new Player("emilia@gmail.com", passwordEncoder().encode("emilia123"));
 
 
 			LocalDateTime date = LocalDateTime.now();
@@ -142,9 +142,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+				.antMatchers("/web/game.html").hasAuthority("USER")
 				.antMatchers("/web/**").permitAll()
 				.antMatchers("/api/**").permitAll();
-
 
 		http.formLogin()
 				.usernameParameter("email")
@@ -152,7 +152,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/api/login");
 
 		http.logout().logoutUrl("/api/logout");
-
 
 
 		// turn off checking for CSRF tokens

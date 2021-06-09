@@ -36,7 +36,7 @@ public class GameController {
     @GetMapping("/games")
     public Map<String, Object> getGames(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("player", !isGuest(authentication) ? makePlayersDTO(playerRepository.findByEmail(authentication.getName())) : "Guest");
+        dto.put("player", isGuest(authentication) ? "Guest" : makePlayersDTO(playerRepository.findByEmail(authentication.getName())));
         dto.put("games", gameRepository.findAll().stream().map(game -> this.makeGameDTO(game)).collect(Collectors.toList()));
         return dto;
     }
@@ -80,7 +80,6 @@ public class GameController {
 
         Map<String, Object> dto = new HashMap<>();
         dto.put("id", player.getId());
-        dto.put("userName", player.getUserName());
         dto.put("email", player.getEmail());
 
         return dto;

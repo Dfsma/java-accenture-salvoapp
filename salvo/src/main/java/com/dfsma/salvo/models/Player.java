@@ -16,7 +16,7 @@ public class Player {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private String userName;
+
     private String email;
     private String password;
 
@@ -29,8 +29,8 @@ public class Player {
 
     public Player() {}
 
-    public Player(String userName, String email, String password) {
-        this.userName = userName;
+    public Player(String email, String password) {
+
         this.email = email;
         this.password = password;
         this.gamePlayers = new HashSet<>();
@@ -41,13 +41,9 @@ public class Player {
     public long getId() {
         return id;
     }
-    public String getUserName() {
-        return userName;
-    }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+
+
 
     public String getEmail() {
         return email;
@@ -103,11 +99,5 @@ public class Player {
     }
 
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
+
 }

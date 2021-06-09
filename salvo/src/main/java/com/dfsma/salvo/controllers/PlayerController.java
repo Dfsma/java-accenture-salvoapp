@@ -27,9 +27,9 @@ public class PlayerController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping("/players")
-    public ResponseEntity<Object> register(@RequestParam String name, @RequestParam String email, @RequestParam String password ){
+    public ResponseEntity<Object> register(@RequestParam String email, @RequestParam String password ){
 
-        if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
+        if(email.isEmpty() || password.isEmpty()){
             return new ResponseEntity<>("Missing Data", HttpStatus.FORBIDDEN);
         }
 
@@ -37,7 +37,7 @@ public class PlayerController {
             return new ResponseEntity<>("Email already in use", HttpStatus.FORBIDDEN);
         }
 
-        playerRepository.save(new Player(name, email, passwordEncoder.encode(password)));
+        playerRepository.save(new Player(email, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -56,7 +56,6 @@ public class PlayerController {
     public Map<String, Object> makePlayersDTO(Player player){
         Map<String, Object> dto = new HashMap<>();
         dto.put("id", player.getId());
-        dto.put("userName", player.getUserName());
         dto.put("email", player.getEmail());
 
         return dto;
