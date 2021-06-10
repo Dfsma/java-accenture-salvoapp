@@ -81,7 +81,7 @@ public class GamePlayer {
         dto.put("id", getId());
         dto.put("player", getPlayer().getPlayerInfo());
         if ( scr == null) {
-            dto.put("score", null);
+            dto.put("score", 0);
         }else{
             dto.put("score", scr.getScore());
         }

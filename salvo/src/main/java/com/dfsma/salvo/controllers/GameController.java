@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -59,7 +58,6 @@ public class GameController {
         return new ResponseEntity<>(Util.makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
     }
 
-    //Validate if a player can see other player game_views.
     @GetMapping("/game_view/{gamePlayer_id}")
     public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id, Authentication authentication){
         try{
@@ -68,6 +66,7 @@ public class GameController {
 
 
             GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id);
+            System.out.println(gamePlayer.getPlayer().getId());
 
             if(gamePlayer.getPlayer().getId() == player.getId()){
                 return new ResponseEntity<>(this.makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
@@ -86,6 +85,7 @@ public class GameController {
     //Join in a Game
     @PostMapping("/game/{game_id}/players")
     public ResponseEntity<Map<String, Object>> joinGame(@PathVariable long game_id, Authentication authentication){
+
         if(Util.isGuest(authentication)){
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
         }
@@ -98,12 +98,11 @@ public class GameController {
 
         Game game = gameRepository.findById(game_id).orElse(null);
 
-
         if(game == null){
             return new ResponseEntity<>(Util.makeMap("error", "Game" + game_id + "Not Found"), HttpStatus.NOT_FOUND);
         }
 
-        List<Long> players_ids = game.getGamePlayers().stream().map(player1 -> player1.getPlayer().getId()).collect(toList());
+        List<Long> players_ids = game.getGamePlayers().stream().map(p -> p.getPlayer().getId()).collect(toList());
         System.out.println("Players ids:" + players_ids);
 
         if(players_ids.contains(player.getId())){
@@ -145,14 +144,21 @@ public class GameController {
 
     public Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer){
         Map<String, Object> dto = new LinkedHashMap<>();
+        Map<String, Object> hits = new LinkedHashMap<>();
+        hits.put("self", new ArrayList<>());
+        hits.put("opponent", new ArrayList<>());
+
         Game game = gamePlayer.getGame();
         Set<Ship> ship = gamePlayer.getShip();
+
+
         dto.put("id", gamePlayer.getId());
         dto.put("created", gamePlayer.getJoined());
+        dto.put("gameState", "PLACESHIPS");
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayers -> gamePlayers.getGamePlayerInfo()).collect(toList()));
         dto.put("ships", ship.stream().map(ships -> ships.getShipsInfo(ships)));
         dto.put("salvoes", game.getGamePlayers().stream().flatMap(gp -> gp.getSalvos().stream().map(salvo -> salvo.getSalvosInfo())).collect(toList()));
-
+        dto.put("hits", hits);
         return dto;
     }
 
