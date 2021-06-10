@@ -39,8 +39,6 @@ public class GameController {
     @Autowired
     GamePlayerService gamePlayerService;
 
-
-
     @PostMapping("/games")
     public ResponseEntity<Object> createGame(Authentication authentication){
         if(Util.isGuest(authentication)){
@@ -61,6 +59,7 @@ public class GameController {
         return new ResponseEntity<>(Util.makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
     }
 
+    //Validate if a player can see other player game_views.
     @GetMapping("/game_view/{gamePlayer_id}")
     public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id, Authentication authentication){
         try{
@@ -83,6 +82,8 @@ public class GameController {
         }
     }
 
+
+    //Join in a Game
     @PostMapping("/game/{game_id}/players")
     public ResponseEntity<Map<String, Object>> joinGame(@PathVariable long game_id, Authentication authentication){
         if(Util.isGuest(authentication)){
@@ -90,26 +91,28 @@ public class GameController {
         }
 
         Player player = playerRepository.findByEmail(authentication.getName());
+
         if(player == null) {
             return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
         }
 
         Game game = gameRepository.findById(game_id).orElse(null);
+
+
         if(game == null){
             return new ResponseEntity<>(Util.makeMap("error", "Game" + game_id + "Not Found"), HttpStatus.NOT_FOUND);
         }
 
-        if(game.getGamePlayers().contains(player)){
+        List<Long> players_ids = game.getGamePlayers().stream().map(player1 -> player1.getPlayer().getId()).collect(toList());
+        System.out.println("Players ids:" + players_ids);
+
+        if(players_ids.contains(player.getId())){
             return new ResponseEntity<>(Util.makeMap("error", "You're already in the game"), HttpStatus.FORBIDDEN);
         }
-
 
         if(game.getGamePlayers().size() >= 2){
             return new ResponseEntity<>(Util.makeMap("error", "The game is full"), HttpStatus.FORBIDDEN);
         }
-
-
-
 
         GamePlayer gamePlayer = new GamePlayer(player, game, LocalDateTime.now());
         if(gamePlayer == null){
@@ -120,8 +123,6 @@ public class GameController {
         return new ResponseEntity<>(Util.makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
 
     }
-
-
 
 
     @GetMapping("/games")

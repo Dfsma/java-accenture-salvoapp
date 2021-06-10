@@ -1,8 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
+
+
 body {
-    background: url(../img/back2.jpg);
-    font-family: 'Dosis', sans-serif;
+   background: url(../img/back2.jpg)center center fixed;
+  background-repeat: no-repeat;
+   background-size: cover;
 }
 
+
+
+svg {
+fill: white;
+animation: 20s linear infinite svg--animation;
+}
+
+svg:hover {
+    fill: red;
+}
+
+@keyframes svg--animation {
+0% {
+  transform: rotateZ(0deg);
+}
+100% {
+  transform: rotateZ(360deg)
+}
+}
+
+.logo {
+ display: flex;
+}
+.salvh1 {
+    font-family: 'Staatliches', cursive;
+    font-size: 95px;
+
+}
+.gameh1 {
+font-family: 'Staatliches', cursive;
+   color: #ffc107;
+       font-size: 70px;
+       margin-top: 25px;
+       margin-left: 20px;
+}
 .bannerTitle {
     margin: 15px auto 0;
     text-align: center;
