@@ -126,7 +126,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 	@Override
 	public void init(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(inputName-> {
-			Player player = playerRepository.findByEmail(inputName);
+			Player player = playerRepository.findByEmail(inputName).orElse(null);
 			if (player != null) {
 				return new User(player.getEmail(), player.getPassword(),
 						AuthorityUtils.createAuthorityList("USER"));

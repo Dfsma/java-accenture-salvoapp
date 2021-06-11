@@ -14,6 +14,6 @@ public class PlayerSI implements PlayerService {
 
     @Override
     public Player findPlayerByUsername(String email) {
-        return playerRepository.findByEmail(email);
+        return playerRepository.findByEmail(email).orElse(null);
     }
 }
