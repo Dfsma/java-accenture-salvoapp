@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Game {
@@ -54,6 +55,10 @@ public class Game {
 
 
     public List<GamePlayer> getGamePlayers(){ return new ArrayList<>(this.gamePlayers); }
+
+    public List<Player> getPlayers(){
+        return  getGamePlayers().stream().map(p -> p.getPlayer()).collect(Collectors.toList());
+    }
 
     public void addScore(Score score){
         score.setGame(this);

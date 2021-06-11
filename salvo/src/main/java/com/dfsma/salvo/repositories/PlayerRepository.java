@@ -10,7 +10,7 @@ import java.util.*;
 @RepositoryRestResource
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
-    Player findByEmail(@Param("email") String email);
+    Optional<Player> findByEmail(@Param("email") String email);
 
 
 }

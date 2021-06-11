@@ -33,7 +33,7 @@ public class PlayerController {
             return new ResponseEntity<>("Missing Data", HttpStatus.FORBIDDEN);
         }
 
-        if (playerRepository.findByEmail(email) != null) {
+        if (playerRepository.findByEmail(email).isPresent()) {
             return new ResponseEntity<>("Email already in use", HttpStatus.FORBIDDEN);
         }
 

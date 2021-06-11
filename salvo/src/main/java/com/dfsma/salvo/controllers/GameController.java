@@ -44,7 +44,7 @@ public class GameController {
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
         }
 
-        Player player = playerRepository.findByEmail(authentication.getName());
+        Player player = playerRepository.findByEmail(authentication.getName()).orElse(null);
         if(player == null) {
             return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
         }
@@ -62,7 +62,7 @@ public class GameController {
     public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id, Authentication authentication){
         try{
 
-            Player player = playerRepository.findByEmail(authentication.getName());
+            Player player = playerRepository.findByEmail(authentication.getName()).orElse(null);
 
 
             GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id);
@@ -90,7 +90,7 @@ public class GameController {
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
         }
 
-        Player player = playerRepository.findByEmail(authentication.getName());
+        Player player = playerRepository.findByEmail(authentication.getName()).orElse(null);
 
         if(player == null) {
             return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
@@ -102,10 +102,10 @@ public class GameController {
             return new ResponseEntity<>(Util.makeMap("error", "Game" + game_id + "Not Found"), HttpStatus.NOT_FOUND);
         }
 
-        List<Long> players_ids = game.getGamePlayers().stream().map(p -> p.getPlayer().getId()).collect(toList());
-        System.out.println("Players ids:" + players_ids);
-
-        if(players_ids.contains(player.getId())){
+        //List<Long> players_ids = game.getGamePlayers().stream().map(p -> p.getPlayer().getId()).collect(toList());
+        //System.out.println("Players ids:" + players_ids);
+        //if(players_ids.contains(player.getId())){
+        if(game.getPlayers().contains(player)){
             return new ResponseEntity<>(Util.makeMap("error", "You're already in the game"), HttpStatus.FORBIDDEN);
         }
 
@@ -127,7 +127,7 @@ public class GameController {
     @GetMapping("/games")
     public Map<String, Object> getGames(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("player", Util.isGuest(authentication) ? "Guest" : makePlayersDTO(playerRepository.findByEmail(authentication.getName())));
+        dto.put("player", Util.isGuest(authentication) ? "Guest" : makePlayersDTO(playerRepository.findByEmail(authentication.getName()).orElse(null)));
         dto.put("games", gameRepository.findAll().stream().map(game -> this.makeGameDTO(game)).collect(Collectors.toList()));
         return dto;
     }
@@ -149,7 +149,7 @@ public class GameController {
         hits.put("opponent", new ArrayList<>());
 
         Game game = gamePlayer.getGame();
-        Set<Ship> ship = gamePlayer.getShip();
+        Set<Ship> ship = gamePlayer.getShips();
 
 
         dto.put("id", gamePlayer.getId());
@@ -161,6 +161,8 @@ public class GameController {
         dto.put("hits", hits);
         return dto;
     }
+
+
 
 
     public Map<String, Object> makePlayersDTO(Player player){
