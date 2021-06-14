@@ -73,7 +73,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			GamePlayer gamePlayer5 = new GamePlayer(player1, game3, date2);
 			GamePlayer gamePlayer6 = new GamePlayer(player4, game3, date2);
 
-
+			/*
 			Ship ship1 = new Ship("destroyer", gamePlayer1, Arrays.asList("H1","H2","H3"));
 			Ship ship2 = new Ship("Submarine", gamePlayer1, Arrays.asList("E1","F1","G1"));
 			Ship ship3 = new Ship("Patrol Boat", gamePlayer1, Arrays.asList("B4","B5"));
@@ -96,14 +96,14 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Score score4 = gamePlayer4.getScore(0);
 
 			Score score5 = gamePlayer5.getScore(0.5);
-
+			*/
 
 			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
 			repoGame.saveAll(Arrays.asList(game1,game2, game3));
 			repoGamePlayer.saveAll(Arrays.asList(gamePlayer1,gamePlayer2, gamePlayer3, gamePlayer4, gamePlayer5, gamePlayer6));
-			repoShip.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5,ship6));
-			repoSalvo.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4));
-			repoScore.saveAll(Arrays.asList(score1, score2, score3, score4, score5));
+			//repoShip.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5,ship6));
+			//repoSalvo.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4));
+			//repoScore.saveAll(Arrays.asList(score1, score2, score3, score4, score5));
 
 
 
@@ -156,7 +156,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/api/login");
 
 		http.logout().logoutUrl("/api/logout");
-
 
 		// turn off checking for CSRF tokens
 		http.csrf().disable();

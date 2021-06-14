@@ -8,7 +8,7 @@ import java.util.List;
 public interface GamePlayerService {
 
     GamePlayer saveGamePlayer(GamePlayer gamePlayer);
-    List<GamePlayer> getGamePlayer();
+    List<GamePlayer> getGamePlayers();
     GamePlayer updateGamePlayer(GamePlayer gamePlayer);
     boolean deleteGamePlayer(Long id);
     GamePlayer findGamePlayerById(Long id);
