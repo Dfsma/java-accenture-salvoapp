@@ -4,7 +4,6 @@ package com.dfsma.salvo.models;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class Salvo {
 
     @ElementCollection
     @Column(name = "locations")
-    private List<String> locations;
+    private List<String> salvoLocations;
 
 
 
@@ -33,10 +32,10 @@ public class Salvo {
     public Salvo() {
     }
 
-    public Salvo(int turn, GamePlayer gamePlayer, List<String> locations) {
+    public Salvo(int turn, GamePlayer gamePlayer, List<String> salvoLocations) {
         this.turn = turn;
         this.gamePlayer = gamePlayer;
-        this.locations = locations;
+        this.salvoLocations = salvoLocations;
     }
 
     public long getId() {
@@ -59,12 +58,12 @@ public class Salvo {
         this.gamePlayer = gamePlayer;
     }
 
-    public List<String> getLocations() {
-        return locations;
+    public List<String> getSalvoLocations() {
+        return salvoLocations;
     }
 
-    public void setLocations(List<String> locations) {
-        this.locations = locations;
+    public void setSalvoLocations(List<String> salvoLocations) {
+        this.salvoLocations = salvoLocations;
     }
 
 
@@ -73,7 +72,7 @@ public class Salvo {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", salvo.getTurn());
         dto.put("player", salvo.getGamePlayer().getPlayer().getId());
-        dto.put("locations", salvo.getLocations());
+        dto.put("locations", salvo.getSalvoLocations());
         return dto;
     }
 
@@ -81,7 +80,7 @@ public class Salvo {
         Map<java.lang.String, java.lang.Object> dto = new LinkedHashMap<>();
         dto.put("turn", getTurn());
         dto.put("player", getGamePlayer().getPlayer().getId());
-        dto.put("locations", getLocations());
+        dto.put("locations", getSalvoLocations());
         return dto;
     }
 }

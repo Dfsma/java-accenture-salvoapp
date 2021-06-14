@@ -6,6 +6,8 @@ import com.dfsma.salvo.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlayerSI implements PlayerService {
 
@@ -13,7 +15,17 @@ public class PlayerSI implements PlayerService {
     PlayerRepository playerRepository;
 
     @Override
-    public Player findPlayerByUsername(String email) {
-        return playerRepository.findByEmail(email).orElse(null);
-    }
+    public Player savePlayer(Player player) {return playerRepository.save(player);}
+
+    @Override
+    public List<Player> getPlayers() { return null; }
+
+    @Override
+    public Player updatePlayer(Player player) { return null; }
+
+    @Override
+    public boolean deletePlayer(Long id) { return false; }
+
+    @Override
+    public Player findPlayerByEmail(String email) { return playerRepository.findByEmail(email).orElse(null); }
 }

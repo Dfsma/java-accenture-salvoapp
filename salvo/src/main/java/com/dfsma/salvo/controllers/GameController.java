@@ -7,6 +7,7 @@ import com.dfsma.salvo.repositories.GamePlayerRepository;
 import com.dfsma.salvo.repositories.GameRepository;
 import com.dfsma.salvo.repositories.PlayerRepository;
 import com.dfsma.salvo.service.GamePlayerService;
+import com.dfsma.salvo.service.PlayerService;
 import com.dfsma.salvo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,6 +39,9 @@ public class GameController {
     @Autowired
     GamePlayerService gamePlayerService;
 
+    @Autowired
+    PlayerService playerService;
+
     @PostMapping("/games")
     public ResponseEntity<Object> createGame(Authentication authentication){
         if(Util.isGuest(authentication)){
@@ -61,9 +65,15 @@ public class GameController {
     @GetMapping("/game_view/{gamePlayer_id}")
     public ResponseEntity<Object> getGameView(@PathVariable Long gamePlayer_id, Authentication authentication){
         try{
+            if(Util.isGuest(authentication)){
+                return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
+            }
 
-            Player player = playerRepository.findByEmail(authentication.getName()).orElse(null);
+            Player player = playerService.findPlayerByEmail(authentication.getName());
 
+            if(player == null) {
+                return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
+            }
 
             GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id);
             System.out.println(gamePlayer.getPlayer().getId());
@@ -74,10 +84,8 @@ public class GameController {
                 return new ResponseEntity<>(Util.makeMap("error", "You´re not in this game"), HttpStatus.NOT_FOUND);
             }
 
-
-
         }catch (Exception exception){
-            return  new ResponseEntity<>("Error: El GamePlayer Id: " + gamePlayer_id + " no existe.",HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity<>("Error: El GamePlayer Id: " + gamePlayer_id + " no existe.", HttpStatus.BAD_REQUEST);
         }
     }
 

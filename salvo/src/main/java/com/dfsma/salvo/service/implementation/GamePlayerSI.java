@@ -5,7 +5,6 @@ import com.dfsma.salvo.repositories.GamePlayerRepository;
 import com.dfsma.salvo.service.GamePlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -20,7 +19,7 @@ public class GamePlayerSI implements GamePlayerService {
     }
 
     @Override
-    public List<GamePlayer> getGamePlayer() {
+    public List<GamePlayer> getGamePlayers() {
         return null;
     }
 

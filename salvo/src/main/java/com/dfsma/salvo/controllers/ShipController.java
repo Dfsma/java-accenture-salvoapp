@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/api")
 public class ShipController {
@@ -54,12 +53,31 @@ public class ShipController {
             return new ResponseEntity<>(Util.makeMap("error", "Ships already placed."), HttpStatus.FORBIDDEN);
         }
 
+        for(Ship ship : ships){
+            if( ship.getType().equals("carrier") && ship.getShipLocations().size() !=  5 ){
+                return new ResponseEntity<>(Util.makeMap("error", "length of "+ ship.getType()  +" not correct"), HttpStatus.FORBIDDEN);
+            }
+            if (ship.getType().equals("battleship") && ship.getShipLocations().size() != 4){
+                return new ResponseEntity<>(Util.makeMap("error", "length of "+ ship.getType()  +" not correct"), HttpStatus.FORBIDDEN);
+            }
+            if (ship.getType().equals("submarine") && ship.getShipLocations().size() != 3){
+                return new ResponseEntity<>(Util.makeMap("error", "length of "+ ship.getType()  +" not correct"), HttpStatus.FORBIDDEN);
+            }
+            if (ship.getType().equals("destroyer") && ship.getShipLocations().size() != 3){
+                return new ResponseEntity<>(Util.makeMap("error", "length of "+ ship.getType()  +" not correct"), HttpStatus.FORBIDDEN);
+            }
+            if (ship.getType().equals("patrolboat") && ship.getShipLocations().size() != 2){
+                return new ResponseEntity<>(Util.makeMap("error", "length of "+ ship.getType()  +" not correct"), HttpStatus.FORBIDDEN);
+            }
+        }
+
         ships.forEach(ship -> ship.setGamePlayer(gamePlayer));
         shipRepository.saveAll(ships);
         /*for(Ship ship : ships){gamePlayer.addShip(ship);}*/
 
-        return new ResponseEntity(Util.makeMap("created", "true"), HttpStatus.CREATED);
+        return new ResponseEntity(Util.makeMap("OK", "Ships Placed Correctly"), HttpStatus.CREATED);
 
     }
+
 
 }
