@@ -66,8 +66,6 @@ public class Salvo {
         this.salvoLocations = salvoLocations;
     }
 
-
-
     public Map<String, Object> getSalvosInfo(Salvo salvo){
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", salvo.getTurn());
