@@ -48,31 +48,34 @@ public class SalvoController {
             return new ResponseEntity<>(Util.makeMap("error", "Game player not found."), HttpStatus.FORBIDDEN);
         }
         if(gamePlayer.getPlayer() != player){
-            return new ResponseEntity<>(Util.makeMap("error", "This is not your game!"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(Util.makeMap("error", "This is not your game."), HttpStatus.UNAUTHORIZED);
         }
 
         int mySalvosSize = gamePlayer.getSalvoes().size();
 
         GamePlayer enemyGamePlayer = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> (gp != gamePlayer)).findAny().orElse(null);
-        System.out.println("enemy email " + enemyGamePlayer.getPlayer().getEmail());
+        //System.out.println("enemy email " + enemyGamePlayer.getPlayer().getEmail());
+
+        if(enemyGamePlayer == null){
+            return new ResponseEntity<>(Util.makeMap("error", "You haven´t opponent."), HttpStatus.UNAUTHORIZED);
+        }
 
         int enemySalvosSize = enemyGamePlayer.getSalvoes().size();
 
         if(salvo.getSalvoLocations().size() < 1 || salvo.getSalvoLocations().size() > 5){
-            return new ResponseEntity<>(Util.makeMap("error", "Salvo shots size error. "), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(Util.makeMap("error", "Too Many shots in salvo."), HttpStatus.FORBIDDEN);
         }
 
         if(mySalvosSize > enemySalvosSize) {
-            return new ResponseEntity<>(Util.makeMap("error", "Wait enemy shot"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(Util.makeMap("error", "Wait enemy shot."), HttpStatus.FORBIDDEN);
         }
 
-
-
         salvo.setTurn(mySalvosSize + 1 );
-        gamePlayer.addSalvo(salvo);
+        salvo.setGamePlayer(gamePlayer);
+        //gamePlayer.addSalvo(salvo);
         salvoRepository.save(salvo);
         System.out.println("Turn: " + (mySalvosSize + 1));
-        return new ResponseEntity<>(Util.makeMap("OK", "Your salvoes were fired!"), HttpStatus.CREATED);
+        return new ResponseEntity<>(Util.makeMap("OK", "Your shots were created."), HttpStatus.CREATED);
 
 
     }
