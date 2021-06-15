@@ -165,7 +165,7 @@ public class GameController {
         dto.put("gameState", "PLACESHIPS");
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayers -> gamePlayers.getGamePlayerInfo()).collect(toList()));
         dto.put("ships", ship.stream().map(ships -> ships.getShipsInfo(ships)));
-        dto.put("salvoes", game.getGamePlayers().stream().flatMap(gp -> gp.getSalvos().stream().map(salvo -> salvo.getSalvosInfo())).collect(toList()));
+        dto.put("salvoes", game.getGamePlayers().stream().flatMap(gp -> gp.getSalvoes().stream().map(salvo -> salvo.getSalvosInfo())).collect(toList()));
         dto.put("hits", hits);
         return dto;
     }

@@ -77,7 +77,7 @@ public class Salvo {
     }
 
     public Map<String, Object> getSalvosInfo(){
-        Map<java.lang.String, java.lang.Object> dto = new LinkedHashMap<>();
+        Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", getTurn());
         dto.put("player", getGamePlayer().getPlayer().getId());
         dto.put("locations", getSalvoLocations());
