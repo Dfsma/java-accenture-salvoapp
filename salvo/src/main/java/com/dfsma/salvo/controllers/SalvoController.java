@@ -14,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,6 +43,7 @@ public class SalvoController {
         }
 
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);
+
         if(gamePlayer == null){
             return new ResponseEntity<>(Util.makeMap("error", "Game player not found."), HttpStatus.FORBIDDEN);
         }
@@ -52,42 +51,29 @@ public class SalvoController {
             return new ResponseEntity<>(Util.makeMap("error", "This is not your game!"), HttpStatus.UNAUTHORIZED);
         }
 
-        int mySalvos = gamePlayer.getSalvos().size();
-        int enemySalvos = gamePlayer.getGame().getGamePlayers().stream().filter(gamePlayer1 -> gamePlayer1.getPlayer() != gamePlayer.getPlayer()).collect(Collectors.toList()).size();
+        int mySalvosSize = gamePlayer.getSalvoes().size();
 
-        if (mySalvos > enemySalvos){
-            return new ResponseEntity<>(Util.makeMap("error", "Wait for enemy turn"), HttpStatus.FORBIDDEN);
+        GamePlayer enemyGamePlayer = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> (gp != gamePlayer)).findAny().orElse(null);
+        System.out.println("enemy email " + enemyGamePlayer.getPlayer().getEmail());
+
+        int enemySalvosSize = enemyGamePlayer.getSalvoes().size();
+
+        if(salvo.getSalvoLocations().size() < 1 || salvo.getSalvoLocations().size() > 5){
+            return new ResponseEntity<>(Util.makeMap("error", "Salvo shots size error. "), HttpStatus.FORBIDDEN);
         }
 
-        if ( salvo.getSalvoLocations().size() <=1 && salvo.getSalvoLocations().size() >=5){
-            return new ResponseEntity<>(Util.makeMap("error", "A player try to do more than 5 shots"), HttpStatus.FORBIDDEN);
-
+        if(mySalvosSize > enemySalvosSize) {
+            return new ResponseEntity<>(Util.makeMap("error", "Wait enemy shot"), HttpStatus.FORBIDDEN);
         }
 
-        int myTurn = gamePlayer.getSalvos().size();
-        salvo.setTurn(myTurn + 1 );
+
+
+        salvo.setTurn(mySalvosSize + 1 );
         gamePlayer.addSalvo(salvo);
         salvoRepository.save(salvo);
+        System.out.println("Turn: " + (mySalvosSize + 1));
         return new ResponseEntity<>(Util.makeMap("OK", "Your salvoes were fired!"), HttpStatus.CREATED);
 
 
-        /*
-        if(salvo.getLocations().size() > 5){
-            return new ResponseEntity<>(Util.makeMap("error", "A player try to do more than 5 shots"), HttpStatus.FORBIDDEN);
-        }
-        else {
-            //Long turnRepeat = mySalvos.stream().filter(salvo1 -> salvo1.getTurn() == salvo.getTurn()).collect(Collectors.counting());
-            int turnRepeat = mySalvos.size();
-            System.out.println("turnRepeat: " + turnRepeat);
-            if(turnRepeat > 0) {
-                return new ResponseEntity<>(Util.makeMap("error", "player firing a salvo more than once per turn"), HttpStatus.FORBIDDEN);
-            }else {
-                salvo.setTurn(turnRepeat+1);
-                gamePlayer.addSalvo(salvo);
-                salvoRepository.save(salvo);
-                return new ResponseEntity<>(Util.makeMap("OK", "Your salvoes were fired!"), HttpStatus.CREATED);
-            }
-        }
-         */
     }
 }
