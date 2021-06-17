@@ -26,6 +26,16 @@ public class Ship {
     @Column(name = "shipLocations")
     private List<String> shipLocations;
 
+
+    public enum ShipTypes {
+        carrier,
+        battleship,
+        submarine,
+        destroyer,
+        patrolboat
+
+    }
+
     public Ship() {}
 
     public Ship(String type, GamePlayer gamePlayer, List<String> shipLocations) {
