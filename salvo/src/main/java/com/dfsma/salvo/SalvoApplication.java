@@ -89,11 +89,11 @@ public class SalvoApplication extends SpringBootServletInitializer {
 
 
 
-			Salvo salvo1 = new Salvo(1, gamePlayer1, Arrays.asList("H4","H5","H6"));
-			Salvo salvo2 = new Salvo(2, gamePlayer1, Arrays.asList("H5","A2"));
+			Salvo salvo1 = new Salvo(1, gamePlayer1, Arrays.asList("I4","I5","F2"));
+			Salvo salvo2 = new Salvo(2, gamePlayer1, Arrays.asList("B2","C2"));
 
-			Salvo salvo3 = new Salvo(1, gamePlayer2, Arrays.asList("B6","B7","B8"));
-			Salvo salvo4 = new Salvo(2, gamePlayer2, Arrays.asList("J1","J2","J3","F4"));
+			Salvo salvo3 = new Salvo(1, gamePlayer2, Arrays.asList("A1","A10","I10"));
+			Salvo salvo4 = new Salvo(2, gamePlayer2, Arrays.asList("J1","J2","J3","J4","C5"));
 			/*
 			Score score1 = gamePlayer1.getScore(1);
 			Score score2 = gamePlayer2.getScore(1);

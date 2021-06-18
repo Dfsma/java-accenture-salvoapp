@@ -28,12 +28,18 @@ public class Ship {
 
 
     public enum ShipTypes {
-        carrier,
-        battleship,
-        submarine,
-        destroyer,
-        patrolboat
 
+        CARRIER("carrier"),
+        BATTLESHIP("battleship"),
+        SUBMARINE("submarine"),
+        DESTROYER("destroyer"),
+        PATROLBOAT("patrolboat");
+
+        private final String getShipName;
+
+        ShipTypes(String shipName) {
+            getShipName = shipName;
+        }
     }
 
     public Ship() {}
