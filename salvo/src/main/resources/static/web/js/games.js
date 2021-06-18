@@ -161,12 +161,13 @@ function updateView() {
             $('#currentPlayer').text(data.player);
             $('#logout-form').hide("slow");
             $('#login-form').show("slow");
+            $('#createGameForm').hide();
 
         } else {
             $('#currentPlayer').text(data.player.email);
             $('#login-form').hide("slow");
             $('#logout-form').show("slow");
-
+            $('#createGameForm').show();
         }
 }
 

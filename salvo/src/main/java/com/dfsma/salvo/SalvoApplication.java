@@ -54,7 +54,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Player player3 = new Player("erika@gmail.com", passwordEncoder().encode("erika123"));
 			Player player4 = new Player("emilia@gmail.com", passwordEncoder().encode("emilia123"));
 
-
+		/*
 			LocalDateTime date = LocalDateTime.now();
 			Game game1 = new Game(date);
 			date = LocalDateTime.from(date.plusSeconds(3600));
@@ -90,11 +90,12 @@ public class SalvoApplication extends SpringBootServletInitializer {
 
 
 			Salvo salvo1 = new Salvo(1, gamePlayer1, Arrays.asList("I4","I5","F2"));
-			Salvo salvo2 = new Salvo(2, gamePlayer1, Arrays.asList("B2","C2"));
+			Salvo salvo2 = new Salvo(2, gamePlayer1, Arrays.asList("B2","C2", "E10"));
 
 			Salvo salvo3 = new Salvo(1, gamePlayer2, Arrays.asList("A1","A10","I10"));
-			Salvo salvo4 = new Salvo(2, gamePlayer2, Arrays.asList("J1","J2","J3","J4","C5"));
-			/*
+			Salvo salvo4 = new Salvo(2, gamePlayer2, Arrays.asList("J1","J2","J3","J4","B10"));
+
+
 			Score score1 = gamePlayer1.getScore(1);
 			Score score2 = gamePlayer2.getScore(1);
 
@@ -102,16 +103,15 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Score score4 = gamePlayer4.getScore(0);
 
 			Score score5 = gamePlayer5.getScore(0.5);
-			*/
 
-			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
 			repoGame.saveAll(Arrays.asList(game1,game2, game3));
 			repoGamePlayer.saveAll(Arrays.asList(gamePlayer1,gamePlayer2, gamePlayer3, gamePlayer4, gamePlayer5, gamePlayer6));
 			repoShip.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5,ship6,ship7,ship8,ship9,ship10));
 			repoSalvo.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4));
 			//repoScore.saveAll(Arrays.asList(score1, score2, score3, score4, score5));
 
-
+		*/
+			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
 
 		};
 	}

@@ -25,7 +25,7 @@ public class Player {
     private Set<GamePlayer> gamePlayers = new HashSet<>();
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    private Set<Score> scores = new HashSet<>();
+    private Set<Score> scores;
 
     public Player() {}
 
@@ -69,7 +69,7 @@ public class Player {
         this.gamePlayers = gamePlayers;
     }
 
-    public Set<Score> getScore() {
+    public Set<Score> getScores() {
         return scores;
     }
 
@@ -96,6 +96,25 @@ public class Player {
 
     public Score getScorePlayer(Game game){
         return scores.stream().filter(score -> score.getGame() == game).findFirst().orElse(null);
+    }
+
+    public long getWonScore(){
+        return this.getScores().stream().
+                filter(score -> score.getScore()==1.0).count();
+    }
+
+    public long getLostScore(){
+        return this.getScores().stream().
+                filter(score -> score.getScore()==0.0).count();
+    }
+
+    public long getTiedScore(){
+        return this.getScores().stream().
+                filter(score -> score.getScore()==0.5).count();
+    }
+
+    public double getTotalScore(){
+        return  getWonScore() + getLostScore() + getTiedScore() ;
     }
 
 
