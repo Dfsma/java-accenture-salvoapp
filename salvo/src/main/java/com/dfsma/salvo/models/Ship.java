@@ -27,21 +27,6 @@ public class Ship {
     private List<String> shipLocations;
 
 
-    public enum ShipTypes {
-
-        CARRIER("carrier"),
-        BATTLESHIP("battleship"),
-        SUBMARINE("submarine"),
-        DESTROYER("destroyer"),
-        PATROLBOAT("patrolboat");
-
-        private final String getShipName;
-
-        ShipTypes(String shipName) {
-            getShipName = shipName;
-        }
-    }
-
     public Ship() {}
 
     public Ship(String type, GamePlayer gamePlayer, List<String> shipLocations) {

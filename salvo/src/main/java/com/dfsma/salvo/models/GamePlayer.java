@@ -26,9 +26,11 @@ public class GamePlayer {
     private Game game;
 
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    @OrderBy
     private Set<Ship> ships;
 
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    @OrderBy
     private Set<Salvo> salvoes;
 
     public GamePlayer() {
@@ -98,6 +100,9 @@ public class GamePlayer {
 
 
     public Score getScore(double score){
+        if (score < 0 ){
+            return null;
+        }
         return new Score(score, player, game);
     }
 

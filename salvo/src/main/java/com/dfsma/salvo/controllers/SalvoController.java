@@ -30,7 +30,7 @@ public class SalvoController {
     @Autowired
     SalvoRepository salvoRepository;
 
-    @PostMapping("/games/players/{gamePlayer_id}/salvos")
+    @PostMapping("/games/players/{gamePlayer_id}/salvoes")
     public ResponseEntity<Map<String, Object>> placeSalvos(@PathVariable Long gamePlayer_id, @RequestBody Salvo salvo, Authentication authentication){
         if(Util.isGuest(authentication)){
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);

@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,9 +51,15 @@ public class PlayerController {
     }
 
     public Map<String, Object> makePlayersDTO(Player player){
-        Map<String, Object> dto = new HashMap<>();
+        Map<String, Object> dto = new LinkedHashMap<>();
+        Map<String, Object> score = new LinkedHashMap<>();
         dto.put("id", player.getId());
         dto.put("email", player.getEmail());
+        score.put("total", player.getTotalScore());
+        score.put("won", player.getWonScore());
+        score.put("tied", player.getTiedScore());
+        score.put("lost", player.getLostScore());
+        dto.put("score", score);
 
         return dto;
     }
