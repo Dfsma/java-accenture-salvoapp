@@ -42,7 +42,6 @@ public class GameController {
     @Autowired
     PlayerService playerService;
 
-    Ship.ShipTypes shipTypes;
 
     @PostMapping("/games")
     public ResponseEntity<Object> createGame(Authentication authentication){
@@ -133,7 +132,6 @@ public class GameController {
 
     }
 
-
     @GetMapping("/games")
     public Map<String, Object> getGames(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -165,11 +163,8 @@ public class GameController {
             hits.put("opponent", new ArrayList<>());
         }
 
-
-
         Game game = gamePlayer.getGame();
         Set<Ship> ship = gamePlayer.getShips();
-
 
         dto.put("id", gamePlayer.getId());
         dto.put("created", gamePlayer.getJoined());
@@ -182,6 +177,12 @@ public class GameController {
     }
 
 
+    public enum ShipType { carrier,
+        battleship,
+        submarine,
+        destroyer,
+        patrolboat
+    }
 
 
     public List<String> getLocationsType(String type, GamePlayer gamePlayer){
@@ -193,8 +194,9 @@ public class GameController {
         return new ArrayList<>();
     }
 
-    public List<Map<String, Object>> makeHitsDTO(GamePlayer gamePlayer){
-            List<Map<String, Object>> hits = new ArrayList<>();
+
+    public List<Object> makeHitsDTO(GamePlayer gamePlayer){
+            List<Object> hits = new LinkedList<>();
 
             int totalCarrierHits = 0;
             int totalBattleShipHits = 0;
@@ -203,7 +205,21 @@ public class GameController {
             int totalPatrolBoatHits = 0;
 
             GamePlayer enemyGamePlayer = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> (gp != gamePlayer)).findAny().orElse(null);
+
+            /*
+            List<Salvo> enemySalvoes = enemyGamePlayer.getSalvoes().stream().collect(toList());
+
+            for (Salvo salvo : enemySalvoes){
+                System.out.println(salvo.getSalvosInfo());
+            }
+
+            List<String> shipTypes = gamePlayer.getShips().stream().map(ship -> ship.getType()).collect(toList());
+            System.out.println(shipTypes);
+            */
+
+
             for (Salvo salvo : enemyGamePlayer.getSalvoes()){
+
                 Map<String, Object> dto = new LinkedHashMap<>();
                 Map<String, Object> damages = new LinkedHashMap<>();
                 List<String> salvoHitList = new ArrayList<>();
@@ -216,33 +232,34 @@ public class GameController {
                 int patrolBoatHits = 0;
 
                 for (String location: salvo.getSalvoLocations()){
-                    if(getLocationsType("carrier", gamePlayer).contains(location)){
+
+                    if(getLocationsType(ShipType.carrier.toString(), gamePlayer).contains(location)){
                         salvoHitList.add(location);
                         carrierHits++;
                         totalCarrierHits++;
                         missedHits--;
 
                     }
-                    if(getLocationsType("battleship", gamePlayer).contains(location)){
+                    if(getLocationsType(ShipType.battleship.toString(), gamePlayer).contains(location)){
                         salvoHitList.add(location);
                         battleShipHits++;
                         totalBattleShipHits++;
                         missedHits--;
 
                     }
-                    if(getLocationsType("submarine", gamePlayer).contains(location)){
+                    if(getLocationsType(ShipType.submarine.toString(), gamePlayer).contains(location)){
                         salvoHitList.add(location);
                         submarineHits++;
                         totalSubmarineHits++;
                         missedHits--;
                     }
-                    if(getLocationsType("destroyer", gamePlayer).contains(location)){
+                    if(getLocationsType(ShipType.destroyer.toString(), gamePlayer).contains(location)){
                         salvoHitList.add(location);
                         destroyerHits++;
                         totalDestroyerHits++;
                         missedHits--;
                     }
-                    if(getLocationsType("patrolboat", gamePlayer).contains(location)){
+                    if(getLocationsType(ShipType.patrolboat.toString(), gamePlayer).contains(location)){
                         salvoHitList.add(location);
                         patrolBoatHits++;
                         totalPatrolBoatHits++;
@@ -271,8 +288,6 @@ public class GameController {
             }
             return hits;
     }
-
-
 
 
     public Map<String, Object> makePlayersDTO(Player player){
