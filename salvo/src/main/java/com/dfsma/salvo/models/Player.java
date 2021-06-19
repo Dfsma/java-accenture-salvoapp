@@ -98,17 +98,17 @@ public class Player {
         return scores.stream().filter(score -> score.getGame() == game).findFirst().orElse(null);
     }
 
-    public long getWonScore(){
+    public double getWonScore(){
         return this.getScores().stream().
                 filter(score -> score.getScore()==1.0).count();
     }
 
-    public long getLostScore(){
+    public double getLostScore(){
         return this.getScores().stream().
                 filter(score -> score.getScore()==0.0).count();
     }
 
-    public long getTiedScore(){
+    public double getTiedScore(){
         return this.getScores().stream().
                 filter(score -> score.getScore()==0.5).count();
     }

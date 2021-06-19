@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 
+spring-biblioteca-api.service
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

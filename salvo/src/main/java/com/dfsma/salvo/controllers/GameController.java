@@ -6,6 +6,7 @@ import com.dfsma.salvo.models.*;
 import com.dfsma.salvo.repositories.GamePlayerRepository;
 import com.dfsma.salvo.repositories.GameRepository;
 import com.dfsma.salvo.repositories.PlayerRepository;
+import com.dfsma.salvo.repositories.ScoreRepository;
 import com.dfsma.salvo.service.GamePlayerService;
 import com.dfsma.salvo.service.PlayerService;
 import com.dfsma.salvo.util.Util;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,6 +37,9 @@ public class GameController {
 
     @Autowired
     GamePlayerRepository gamePlayerRepository;
+
+    @Autowired
+    ScoreRepository scoreRepository;
 
     @Autowired
     GamePlayerService gamePlayerService;
@@ -80,7 +85,57 @@ public class GameController {
             System.out.println(gamePlayer.getPlayer().getId());
 
             if(gamePlayer.getPlayer().getId() == player.getId()){
-                return new ResponseEntity<>(this.makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
+                GamePlayer enemyGamePlayer = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> (gp != gamePlayer)).findAny().orElse(null);
+
+                if(setGameState(gamePlayer) == "WON"){
+                    if (gamePlayer.getGame().getScores().size() < 2) {
+                        Set<Score> scores = new HashSet<>();
+
+                        Score score1 = new Score();
+                        score1.setPlayer(gamePlayer.getPlayer());
+                        score1.setGame(gamePlayer.getGame());
+                        score1.setFinishDate(Date.from(Instant.now()));
+                        score1.setScore(1D);
+                        scoreRepository.save(score1);
+
+                        Score score2 = new Score();
+                        score2.setPlayer(enemyGamePlayer.getPlayer());
+                        score2.setGame(gamePlayer.getGame());
+                        score2.setFinishDate(Date.from(Instant.now()));
+                        score2.setScore(0D);
+                        scoreRepository.save(score2);
+
+                        scores.add(score1);
+                        scores.add(score2);
+                        enemyGamePlayer.getGame().setScores(scores);
+
+                    }
+                }
+                if(setGameState(gamePlayer) == "TIE"){
+                    if(gamePlayer.getGame().getScores().size()<2) {
+                        Set<Score> scores = new HashSet<Score>();
+
+                        Score score1 = new Score();
+                        score1.setPlayer(gamePlayer.getPlayer());
+                        score1.setGame(gamePlayer.getGame());
+                        score1.setFinishDate(Date.from(Instant.now()));
+                        score1.setScore(0.5D);
+                        scoreRepository.save(score1);
+
+                        Score score2 = new Score();
+                        score2.setPlayer(enemyGamePlayer.getPlayer());
+                        score2.setGame(gamePlayer.getGame());
+                        score2.setFinishDate(Date.from(Instant.now()));
+                        score2.setScore(0.5D);
+                        scoreRepository.save(score2);
+
+                        scores.add(score1);
+                        scores.add(score2);
+                        enemyGamePlayer.getGame().setScores(scores);
+                        }
+                    }
+
+                    return new ResponseEntity<>(this.makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
             }else{
                 return new ResponseEntity<>(Util.makeMap("error", "You´re not in this game"), HttpStatus.NOT_FOUND);
             }
@@ -111,9 +166,6 @@ public class GameController {
             return new ResponseEntity<>(Util.makeMap("error", "Game" + game_id + "Not Found"), HttpStatus.NOT_FOUND);
         }
 
-        //List<Long> players_ids = game.getGamePlayers().stream().map(p -> p.getPlayer().getId()).collect(toList());
-        //System.out.println("Players ids:" + players_ids);
-        //if(players_ids.contains(player.getId())){
         if(game.getPlayers().contains(player)){
             return new ResponseEntity<>(Util.makeMap("error", "You're already in the game"), HttpStatus.FORBIDDEN);
         }
@@ -279,7 +331,7 @@ public class GameController {
             int myImpacts = makeDamage(gamePlayer);
             int enemyImpacts = makeDamage(enemyGamePlayer);
 
-            if(myImpacts==17 && enemyImpacts == 17){
+            if(myImpacts == 17 && enemyImpacts == 17){
                 return  "TIE";
             }else if(myImpacts == 17 && gamePlayer.getSalvoes().size() == enemyGamePlayer.getSalvoes().size()){
                 return "LOSE";
