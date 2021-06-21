@@ -27,7 +27,7 @@ public class gamePlayerDTO {
 
         dto.put("id", gamePlayer.getId());
         dto.put("created", gamePlayer.getJoined());
-        dto.put("gameState", hitDTO.setGameState(gamePlayer));
+        dto.put("gameState", Util.setGameState(gamePlayer));
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayers -> getGamePlayerInfo(gamePlayers)).collect(toList()));
         dto.put("ships", ship.stream().map(ships -> shipDTO.getShipsInfo(ships)));
         dto.put("salvoes", game.getGamePlayers().stream().flatMap(gp -> gp.getSalvoes().stream().map(salvo -> salvo.getSalvosInfo())).collect(toList()));

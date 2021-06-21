@@ -7,6 +7,9 @@ import com.dfsma.salvo.models.Ship;
 import com.dfsma.salvo.repositories.GamePlayerRepository;
 import com.dfsma.salvo.repositories.PlayerRepository;
 import com.dfsma.salvo.repositories.ShipRepository;
+import com.dfsma.salvo.service.GamePlayerService;
+import com.dfsma.salvo.service.PlayerService;
+import com.dfsma.salvo.service.ShipService;
 import com.dfsma.salvo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,13 +25,13 @@ import java.util.Map;
 public class ShipController {
 
     @Autowired
-    ShipRepository shipRepository;
+    ShipService shipService;
 
     @Autowired
-    GamePlayerRepository gamePlayerRepository;
+    GamePlayerService gamePlayerService;
 
     @Autowired
-    PlayerRepository playerRepository;
+    PlayerService playerService;
 
     @PostMapping("/games/players/{gamePlayer_id}/ships")
     public ResponseEntity<Map<String, Object>> placeShips(@PathVariable Long gamePlayer_id, @RequestBody List<Ship> ships, Authentication authentication){
@@ -36,13 +39,13 @@ public class ShipController {
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
         }
 
-        Player player = playerRepository.findByEmail(authentication.getName()).orElse(null);
+        Player player = playerService.findPlayerByEmail(authentication.getName()).orElse(null);
 
         if(player == null) {
             return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
         }
 
-        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayer_id).orElse(null);
+        GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id).orElse(null);
         if(gamePlayer == null){
             return new ResponseEntity<>(Util.makeMap("error", "Game player not found."), HttpStatus.FORBIDDEN);
         }
@@ -72,7 +75,7 @@ public class ShipController {
         }
 
         ships.forEach(ship -> ship.setGamePlayer(gamePlayer));
-        shipRepository.saveAll(ships);
+        shipService.saveAllShips(ships);
         /*for(Ship ship : ships){gamePlayer.addShip(ship);}*/
 
         return new ResponseEntity(Util.makeMap("OK", "Ships Placed Correctly"), HttpStatus.CREATED);

@@ -90,35 +90,6 @@ public class hitDTO {
         return hits;
     }
 
-    public static String setGameState(GamePlayer gamePlayer){
-
-
-
-        if(gamePlayer.getGame().getGamePlayers().size()==2) {
-            int myImpacts = getDamage(gamePlayer);
-            int enemyImpacts = getDamage(Util.enemyGamePlayer(gamePlayer));
-
-            if(myImpacts == 17 && enemyImpacts == 17){
-                return  "TIE";
-            }else if(myImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
-                return "LOSE";
-            }else if(enemyImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
-                return "WON";
-            }
-        }
-        if (gamePlayer.getShips().isEmpty()) {
-            return "PLACESHIPS";
-        }else if( (gamePlayer.getGame().getGamePlayers().size() == 1 ) || Util.enemyGamePlayer(gamePlayer).getShips().size() == 0 ){
-            return "WAITINGFOROPP";
-        }else if( gamePlayer.getGame().getGamePlayers().size()==2  && gamePlayer.getSalvoes().size() > Util.enemyGamePlayer(gamePlayer).getSalvoes().size()) {
-            return "WAIT";
-        }else{
-            return "PLAY";
-        }
-
-    }
-
-
     public static int getDamage(GamePlayer gamePlayer) {
 
         int totalDamage = 0;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlayerSI implements PlayerService {
@@ -18,7 +19,7 @@ public class PlayerSI implements PlayerService {
     public Player savePlayer(Player player) {return playerRepository.save(player);}
 
     @Override
-    public List<Player> getPlayers() { return null; }
+    public List<Player> getPlayers() { return playerRepository.findAll(); }
 
     @Override
     public Player updatePlayer(Player player) { return null; }
@@ -27,5 +28,10 @@ public class PlayerSI implements PlayerService {
     public boolean deletePlayer(Long id) { return false; }
 
     @Override
-    public Player findPlayerByEmail(String email) { return playerRepository.findByEmail(email).orElse(null); }
+    public Optional<Player> findPlayerById(Long id) {
+        return playerRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Player> findPlayerByEmail(String email) { return playerRepository.findByEmail(email); }
 }

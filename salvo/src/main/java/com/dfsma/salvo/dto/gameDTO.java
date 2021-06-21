@@ -14,7 +14,7 @@ public class gameDTO {
         dto.put("id", game.getId());
         dto.put("created", game.getDate());
         dto.put("gamePlayers", game.getGamePlayers().stream().map(gamePlayer -> gamePlayerDTO.getGamePlayerInfo(gamePlayer)).collect(toList()));
-        dto.put("scores", game.getScores().stream().map(score -> scoreDTO.getScoresInfo(score)).collect(toList()));
+        dto.put("scores", game.getScores().stream().map(score -> scoreDTO.makeScoreDto(score)).collect(toList()));
         return dto;
     }
 

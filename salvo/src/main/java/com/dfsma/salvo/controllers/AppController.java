@@ -1,20 +1,13 @@
 package com.dfsma.salvo.controllers;
 
-import com.dfsma.salvo.models.Game;
-import com.dfsma.salvo.models.GamePlayer;
-import com.dfsma.salvo.models.Player;
+
 import com.dfsma.salvo.repositories.GamePlayerRepository;
 import com.dfsma.salvo.repositories.GameRepository;
 import com.dfsma.salvo.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 
 
 @RestController

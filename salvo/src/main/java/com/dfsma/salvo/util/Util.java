@@ -1,5 +1,6 @@
 package com.dfsma.salvo.util;
 
+import com.dfsma.salvo.dto.hitDTO;
 import com.dfsma.salvo.models.GamePlayer;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.dfsma.salvo.dto.hitDTO.getDamage;
 
 public class Util {
 
@@ -33,5 +36,31 @@ public class Util {
         }
 
         return new ArrayList<>();
+    }
+
+    public static String setGameState(GamePlayer gamePlayer){
+
+        if(gamePlayer.getGame().getGamePlayers().size()==2) {
+            int myImpacts = hitDTO.getDamage(gamePlayer);
+            int enemyImpacts = getDamage(Util.enemyGamePlayer(gamePlayer));
+
+            if(myImpacts == 17 && enemyImpacts == 17){
+                return  "TIE";
+            }else if(myImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
+                return "LOSE";
+            }else if(enemyImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
+                return "WON";
+            }
+        }
+        if (gamePlayer.getShips().isEmpty()) {
+            return "PLACESHIPS";
+        }else if( (gamePlayer.getGame().getGamePlayers().size() == 1 ) || Util.enemyGamePlayer(gamePlayer).getShips().size() == 0 ){
+            return "WAITINGFOROPP";
+        }else if( gamePlayer.getGame().getGamePlayers().size()==2  && gamePlayer.getSalvoes().size() > Util.enemyGamePlayer(gamePlayer).getSalvoes().size()) {
+            return "WAIT";
+        }else{
+            return "PLAY";
+        }
+
     }
 }
