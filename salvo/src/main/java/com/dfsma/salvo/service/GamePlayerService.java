@@ -4,6 +4,7 @@ package com.dfsma.salvo.service;
 import com.dfsma.salvo.models.GamePlayer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GamePlayerService {
 
@@ -11,5 +12,5 @@ public interface GamePlayerService {
     List<GamePlayer> getGamePlayers();
     GamePlayer updateGamePlayer(GamePlayer gamePlayer);
     boolean deleteGamePlayer(Long id);
-    GamePlayer findGamePlayerById(Long id);
+    Optional<GamePlayer> findGamePlayerById(Long id);
 }

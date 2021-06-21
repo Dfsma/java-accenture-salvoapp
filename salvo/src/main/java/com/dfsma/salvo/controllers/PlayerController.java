@@ -2,7 +2,7 @@ package com.dfsma.salvo.controllers;
 
 import com.dfsma.salvo.dto.playerDTO;
 import com.dfsma.salvo.models.Player;
-import com.dfsma.salvo.repositories.PlayerRepository;
+import com.dfsma.salvo.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +18,19 @@ import java.util.stream.Collectors;
 public class PlayerController {
 
     @Autowired
-    PlayerRepository playerRepository;
+    PlayerService playerService;
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
     @GetMapping("/players")
     public List<Map<String, Object>> getPlayers() {
-        return playerRepository.findAll().stream().map(player -> playerDTO.makePlayersAndScoresDTO(player)).collect(Collectors.toList());
+        return playerService.getPlayers().stream().map(player -> playerDTO.makePlayersAndScoresDTO(player)).collect(Collectors.toList());
     }
 
     @GetMapping(path = "/players/{player_id}")
     public ResponseEntity<Object> getPlayer(@PathVariable Long player_id){
-        Player player = playerRepository.findById(player_id).orElse(null);
+        Player player = playerService.findPlayerById(player_id).orElse(null);
         return new ResponseEntity<>(playerDTO.makePlayersAndScoresDTO(player), HttpStatus.ACCEPTED);
     }
 
@@ -40,11 +41,11 @@ public class PlayerController {
             return new ResponseEntity<>("Missing Data", HttpStatus.FORBIDDEN);
         }
 
-        if (playerRepository.findByEmail(email).isPresent()) {
+        if (playerService.findPlayerByEmail(email).isPresent()) {
             return new ResponseEntity<>("Email already in use", HttpStatus.FORBIDDEN);
         }
 
-        playerRepository.save(new Player(email, passwordEncoder.encode(password)));
+        playerService.savePlayer(new Player(email, passwordEncoder.encode(password)));
         return new ResponseEntity<>("User Created", HttpStatus.CREATED);
     }
 

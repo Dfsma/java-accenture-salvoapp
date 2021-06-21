@@ -1,8 +1,10 @@
 package com.dfsma.salvo.service;
 
+import com.dfsma.salvo.models.GamePlayer;
 import com.dfsma.salvo.models.Player;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlayerService {
 
@@ -10,5 +12,6 @@ public interface PlayerService {
     List<Player> getPlayers();
     Player updatePlayer(Player player);
     boolean deletePlayer(Long id);
-    Player findPlayerByEmail(String email);
+    Optional<Player> findPlayerById(Long id);
+    Optional<Player> findPlayerByEmail(String email);
 }

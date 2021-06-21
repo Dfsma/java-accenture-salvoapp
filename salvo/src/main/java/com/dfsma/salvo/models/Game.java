@@ -77,13 +77,5 @@ public class Game {
         return  scores.add(score);
     }
 
-    public enum GameState {
-        WAITINGFOROPP,
-        WAIT,
-        PLAY,
-        PLACESHIPS,
-        WON,
-        LOST,
-        TIE
-    }
+
 }

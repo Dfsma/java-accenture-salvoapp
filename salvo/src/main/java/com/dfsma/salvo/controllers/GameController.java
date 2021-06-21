@@ -6,12 +6,10 @@ import com.dfsma.salvo.dto.gamePlayerDTO;
 import com.dfsma.salvo.dto.playerDTO;
 import com.dfsma.salvo.models.*;
 
-import com.dfsma.salvo.repositories.GamePlayerRepository;
-import com.dfsma.salvo.repositories.GameRepository;
-import com.dfsma.salvo.repositories.PlayerRepository;
-import com.dfsma.salvo.repositories.ScoreRepository;
 import com.dfsma.salvo.service.GamePlayerService;
+import com.dfsma.salvo.service.GameService;
 import com.dfsma.salvo.service.PlayerService;
+import com.dfsma.salvo.service.ScoreService;
 import com.dfsma.salvo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,11 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api")
@@ -32,13 +30,7 @@ import static java.util.stream.Collectors.toList;
 public class GameController {
 
     @Autowired
-    GameRepository gameRepository;
-
-    @Autowired
-    PlayerRepository playerRepository;
-
-    @Autowired
-    GamePlayerRepository gamePlayerRepository;
+    GameService gameService;
 
     @Autowired
     GamePlayerService gamePlayerService;
@@ -46,23 +38,35 @@ public class GameController {
     @Autowired
     PlayerService playerService;
 
+    @Autowired
+    ScoreService scoreService;
+
+    @GetMapping("/games")
+    public Map<String, Object> getGames(Authentication authentication) {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("player", Util.isGuest(authentication) ? "Guest" : playerDTO.makePlayersDTO(playerService.findPlayerByEmail(authentication.getName()).orElse(null)));
+        dto.put("games", gameService.getGames().stream().map(game -> gameDTO.makeGameDTO(game)).collect(Collectors.toList()));
+        return dto;
+    }
 
     @PostMapping("/games")
     public ResponseEntity<Object> createGame(Authentication authentication){
+
         if(Util.isGuest(authentication)){
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
         }
 
-        Player player = playerRepository.findByEmail(authentication.getName()).orElse(null);
+        Player player = playerService.findPlayerByEmail(authentication.getName()).orElse(null);
+
         if(player == null) {
             return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
         }
 
         Game game = new Game();
-        gameRepository.save(game);
+        gameService.saveGame(game);
 
         GamePlayer gamePlayer = new GamePlayer(player, game, LocalDateTime.now());
-        gamePlayerRepository.save(gamePlayer);
+        gamePlayerService.saveGamePlayer(gamePlayer);
 
         return new ResponseEntity<>(Util.makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
     }
@@ -74,14 +78,55 @@ public class GameController {
                 return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
             }
 
-            Player player = playerService.findPlayerByEmail(authentication.getName());
+            Player player = playerService.findPlayerByEmail(authentication.getName()).orElse(null);
 
             if(player == null) {
                 return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
             }
 
-            GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id);
+            GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id).orElse(null);
             System.out.println(gamePlayer.getPlayer().getId());
+
+            if(Util.setGameState(gamePlayer) == "WON"){
+                if(gamePlayer.getGame().getScores().size()<2) {
+                    Set<Score> scores = new HashSet<>();
+                    Score score1 = new Score();
+                    score1.setPlayer(gamePlayer.getPlayer());
+                    score1.setGame(gamePlayer.getGame());
+                    score1.setFinishDate(Date.from(Instant.now()));
+                    score1.setScore(1D);
+                    scoreService.saveScore(score1);
+                    Score score2 = new Score();
+                    score2.setPlayer(Util.enemyGamePlayer(gamePlayer).getPlayer());
+                    score2.setGame(gamePlayer.getGame());
+                    score2.setFinishDate(Date.from(Instant.now()));
+                    score2.setScore(0D);
+                    scoreService.saveScore(score2);
+                    scores.add(score1);
+                    scores.add(score2);
+                    Util.enemyGamePlayer(gamePlayer).getGame().setScores(scores);
+                }
+            }
+            if(Util.setGameState(gamePlayer) == "TIE"){
+                if(gamePlayer.getGame().getScores().size()<2) {
+                    Set<Score> scores = new HashSet<Score>();
+                    Score score1 = new Score();
+                    score1.setPlayer(gamePlayer.getPlayer());
+                    score1.setGame(gamePlayer.getGame());
+                    score1.setFinishDate(Date.from(Instant.now()));
+                    score1.setScore(0.5D);
+                    scoreService.saveScore(score1);
+                    Score score2 = new Score();
+                    score2.setPlayer(Util.enemyGamePlayer(gamePlayer).getPlayer());
+                    score2.setGame(gamePlayer.getGame());
+                    score2.setFinishDate(Date.from(Instant.now()));
+                    score2.setScore(0.5D);
+                    scoreService.saveScore(score2);
+                    scores.add(score1);
+                    scores.add(score2);
+                    Util.enemyGamePlayer(gamePlayer).getGame().setScores(scores);
+                }
+            }
 
             if(gamePlayer.getPlayer().getId() == player.getId()){
                     return new ResponseEntity<>(gamePlayerDTO.makeGamePlayerDTO(gamePlayer), HttpStatus.ACCEPTED);
@@ -101,12 +146,12 @@ public class GameController {
             return new ResponseEntity<>(Util.makeMap("error", "Not logged in."), HttpStatus.UNAUTHORIZED);
         }
 
-        Player player = playerRepository.findByEmail(authentication.getName()).orElse(null);
+        Player player = playerService.findPlayerByEmail(authentication.getName()).orElse(null);
         if(player == null) {
             return new ResponseEntity<>(Util.makeMap("error", "Player not found."), HttpStatus.NOT_FOUND);
         }
 
-        Game game = gameRepository.findById(game_id).orElse(null);
+        Game game = gameService.findGameById(game_id).orElse(null);
         if(game == null){
             return new ResponseEntity<>(Util.makeMap("error", "Game" + game_id + "Not Found"), HttpStatus.NOT_FOUND);
         }
@@ -124,18 +169,12 @@ public class GameController {
             return new ResponseEntity<>(Util.makeMap("error", "Couldn't create GamePlayer"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        gamePlayerRepository.save(gamePlayer);
+        gamePlayerService.saveGamePlayer(gamePlayer);
         return new ResponseEntity<>(Util.makeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
 
     }
 
-    @GetMapping("/games")
-    public Map<String, Object> getGames(Authentication authentication) {
-        Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("player", Util.isGuest(authentication) ? "Guest" : playerDTO.makePlayersDTO(playerRepository.findByEmail(authentication.getName()).orElse(null)));
-        dto.put("games", gameRepository.findAll().stream().map(game -> gameDTO.makeGameDTO(game)).collect(Collectors.toList()));
-        return dto;
-    }
+
 
 
 

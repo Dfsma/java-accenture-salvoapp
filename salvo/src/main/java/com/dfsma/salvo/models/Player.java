@@ -95,17 +95,17 @@ public class Player {
 
     public double getWonScore(){
         return this.getScores().stream().
-                filter(score -> score.getScore()==1.0).count();
+                filter(score -> score.getScore() == 1.0).count();
     }
 
     public double getLostScore(){
         return this.getScores().stream().
-                filter(score -> score.getScore()==0.0).count();
+                filter(score -> score.getScore() == 0.0).count();
     }
 
     public double getTiedScore(){
         return this.getScores().stream().
-                filter(score -> score.getScore()==0.5).count();
+                filter(score -> score.getScore() == 0.5).count();
     }
 
     public double getTotalScore(){
