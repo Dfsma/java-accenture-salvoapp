@@ -73,11 +73,6 @@ public class Score {
         this.player = player;
     }
 
-    public Map<String, Object> getScoresInfo(){
-        Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("score", getPlayer().getScorePlayer(getGame()).getScore());
-        dto.put("player", getPlayer().getId());
-        return dto;
-    }
+
 
 }

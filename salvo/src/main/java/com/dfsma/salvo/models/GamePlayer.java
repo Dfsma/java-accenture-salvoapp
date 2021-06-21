@@ -20,7 +20,6 @@ public class GamePlayer {
     @JoinColumn(name = "player_id")
     private Player player;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     private Game game;
@@ -32,6 +31,7 @@ public class GamePlayer {
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     @OrderBy
     private Set<Salvo> salvoes;
+
 
     public GamePlayer() {
 
@@ -76,36 +76,7 @@ public class GamePlayer {
     public Set<Salvo> getSalvoes() { return salvoes; }
     public void setSalvoes(Set<Salvo> salvoes) { this.salvoes = salvoes; }
 
-
-    public Map<String, Object> getGamePlayerInfo(){
-        Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        Score scr = getPlayer().getScorePlayer(getGame());
-        dto.put("id", getId());
-        dto.put("player", getPlayer().getPlayerInfo());
-        if ( scr == null) {
-            dto.put("score", 0);
-        }else{
-            dto.put("score", scr.getScore());
-        }
-        return dto;
-    }
-
-    public Map<String, Object> getPlayerScoreInfo(){
-        Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("id", getId());
-        dto.put("player", getPlayer().getPlayerInfo());
-        dto.put("score", getPlayer().getScorePlayer(getGame()).getScore());
-        return dto;
-    }
-
-
-    public Score getScore(double score){
-        if (score < 0 ){
-            return null;
-        }
-        return new Score(score, player, game);
-    }
-
+    /*I use set methods to add a ship and salvo.*/
     public void addShip(Ship ship){
         ship.setGamePlayer(this);
         ships.add(ship);

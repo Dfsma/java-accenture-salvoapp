@@ -16,10 +16,8 @@ public class Player {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-
     private String email;
     private String password;
-
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers = new HashSet<>();
@@ -37,13 +35,10 @@ public class Player {
         this.scores = new HashSet<>();
     }
 
-    /*Getter y Setters*/
+
     public long getId() {
         return id;
     }
-
-
-
 
     public String getEmail() {
         return email;
@@ -98,17 +93,17 @@ public class Player {
         return scores.stream().filter(score -> score.getGame() == game).findFirst().orElse(null);
     }
 
-    public long getWonScore(){
+    public double getWonScore(){
         return this.getScores().stream().
                 filter(score -> score.getScore()==1.0).count();
     }
 
-    public long getLostScore(){
+    public double getLostScore(){
         return this.getScores().stream().
                 filter(score -> score.getScore()==0.0).count();
     }
 
-    public long getTiedScore(){
+    public double getTiedScore(){
         return this.getScores().stream().
                 filter(score -> score.getScore()==0.5).count();
     }

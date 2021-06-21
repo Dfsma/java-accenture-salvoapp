@@ -27,21 +27,8 @@ svg:hover {
 }
 }
 
-.logo {
- display: flex;
-}
-.salvh1 {
-    font-family: 'Staatliches', cursive;
-    font-size: 95px;
 
-}
-.gameh1 {
-font-family: 'Staatliches', cursive;
-   color: #ffc107;
-       font-size: 70px;
-       margin-top: 25px;
-       margin-left: 20px;
-}
+
 .bannerTitle {
     margin: 15px auto 0;
     text-align: center;
