@@ -16,6 +16,7 @@ public class Salvo {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
+
     private int turn;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -25,9 +26,6 @@ public class Salvo {
     @ElementCollection
     @Column(name = "locations")
     private List<String> salvoLocations;
-
-
-
 
     public Salvo() {
     }

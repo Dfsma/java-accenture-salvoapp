@@ -54,7 +54,6 @@ public class SalvoController {
         int mySalvosSize = gamePlayer.getSalvoes().size();
 
         GamePlayer enemyGamePlayer = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> (gp != gamePlayer)).findAny().orElse(null);
-        //System.out.println("enemy email " + enemyGamePlayer.getPlayer().getEmail());
 
         if(enemyGamePlayer == null){
             return new ResponseEntity<>(Util.makeMap("error", "You haven´t opponent."), HttpStatus.UNAUTHORIZED);

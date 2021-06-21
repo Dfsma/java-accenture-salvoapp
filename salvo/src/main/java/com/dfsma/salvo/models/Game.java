@@ -76,4 +76,14 @@ public class Game {
     public boolean addGameScore(Score score){
         return  scores.add(score);
     }
+
+    public enum GameState {
+        WAITINGFOROPP,
+        WAIT,
+        PLAY,
+        PLACESHIPS,
+        WON,
+        LOST,
+        TIE
+    }
 }
