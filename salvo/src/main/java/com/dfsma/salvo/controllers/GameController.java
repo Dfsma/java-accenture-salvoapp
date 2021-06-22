@@ -96,13 +96,14 @@ public class GameController {
                     score1.setFinishDate(Date.from(Instant.now()));
                     score1.setScore(1D);
                     scoreService.saveScore(score1);
+                    scores.add(score1);
+
                     Score score2 = new Score();
                     score2.setPlayer(Util.enemyGamePlayer(gamePlayer).getPlayer());
                     score2.setGame(gamePlayer.getGame());
                     score2.setFinishDate(Date.from(Instant.now()));
                     score2.setScore(0D);
                     scoreService.saveScore(score2);
-                    scores.add(score1);
                     scores.add(score2);
                     Util.enemyGamePlayer(gamePlayer).getGame().setScores(scores);
                 }
@@ -116,6 +117,7 @@ public class GameController {
                     score1.setFinishDate(Date.from(Instant.now()));
                     score1.setScore(0.5D);
                     scoreService.saveScore(score1);
+
                     Score score2 = new Score();
                     score2.setPlayer(Util.enemyGamePlayer(gamePlayer).getPlayer());
                     score2.setGame(gamePlayer.getGame());
