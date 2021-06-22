@@ -28,6 +28,14 @@ svg:hover {
 }
 
 
+.my-custom-scrollbar {
+position: relative;
+height: 200px;
+overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
 
 .bannerTitle {
     margin: 15px auto 0;
