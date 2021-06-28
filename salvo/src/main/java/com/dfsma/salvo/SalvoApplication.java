@@ -2,6 +2,7 @@ package com.dfsma.salvo;
 
 import com.dfsma.salvo.models.*;
 import com.dfsma.salvo.repositories.*;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -56,6 +57,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Player player4 = new Player("emilia@gmail.com", passwordEncoder().encode("emilia123"));
 
 
+			/*
 			LocalDateTime date = LocalDateTime.now();
 			Game game1 = new Game(date);
 			date = LocalDateTime.from(date.plusSeconds(3600));
@@ -101,20 +103,20 @@ public class SalvoApplication extends SpringBootServletInitializer {
 
 			score1.setPlayer(player1);
 			score1.setGame(game1);
-			score1.setFinishDate(Date.from(Instant.now()));
+			score1.setFinishDate(LocalDateTime.now());
 			score1.setScore(1D);
 
 
 
-			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
+
 			repoGame.saveAll(Arrays.asList(game1,game2, game3));
 			repoGamePlayer.saveAll(Arrays.asList(gamePlayer1,gamePlayer2, gamePlayer3, gamePlayer4, gamePlayer5, gamePlayer6));
 			repoShip.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5,ship6,ship7,ship8,ship9,ship10));
 			repoSalvo.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4));
 			repoScore.saveAll(Arrays.asList(score1));
+			*/
 
-
-
+			repoPlayer.saveAll(Arrays.asList(player1,player2,player3,player4));
 
 		};
 	}

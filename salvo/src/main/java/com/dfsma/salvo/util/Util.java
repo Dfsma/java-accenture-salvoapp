@@ -2,17 +2,24 @@ package com.dfsma.salvo.util;
 
 import com.dfsma.salvo.dto.hitDTO;
 import com.dfsma.salvo.models.GamePlayer;
+import com.dfsma.salvo.models.Score;
+import com.dfsma.salvo.service.ScoreService;
+import org.apache.tomcat.jni.Local;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static com.dfsma.salvo.dto.hitDTO.getDamage;
 
 public class Util {
+
+    @Autowired
+    static
+    ScoreService scoreService;
 
     public static Map<String, Object> makeMap(String key, Object value) {
         Map<String, Object> map = new LinkedHashMap<>();
@@ -40,15 +47,20 @@ public class Util {
 
     public static String setGameState(GamePlayer gamePlayer){
 
-        if(gamePlayer.getGame().getGamePlayers().size()==2) {
+        if(gamePlayer.getGame().getGamePlayers().size() == 2) {
+
             int myImpacts = hitDTO.getDamage(gamePlayer);
             int enemyImpacts = getDamage(Util.enemyGamePlayer(gamePlayer));
 
+
             if(myImpacts == 17 && enemyImpacts == 17){
+
                 return  "TIE";
             }else if(myImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
+
                 return "LOSE";
             }else if(enemyImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
+
                 return "WON";
             }
         }
@@ -62,5 +74,8 @@ public class Util {
             return "PLAY";
         }
 
+
+
     }
+
 }

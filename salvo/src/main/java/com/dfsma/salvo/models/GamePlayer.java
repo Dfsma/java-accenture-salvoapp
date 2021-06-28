@@ -5,6 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import static java.util.Collections.max;
 
 @Entity
 public class GamePlayer {
@@ -75,6 +77,13 @@ public class GamePlayer {
 
     public Set<Salvo> getSalvoes() { return salvoes; }
     public void setSalvoes(Set<Salvo> salvoes) { this.salvoes = salvoes; }
+
+    public int getTurn(){
+        if(salvoes.size() == 0){
+            return 0;
+        }
+        return max(salvoes.stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList()));
+    }
 
     /*I use set methods to add a ship and salvo.*/
     public void addShip(Ship ship){
