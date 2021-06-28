@@ -5,9 +5,11 @@ import com.dfsma.salvo.models.GamePlayer;
 import com.dfsma.salvo.models.Player;
 import com.dfsma.salvo.models.Salvo;
 
+import com.dfsma.salvo.models.Score;
 import com.dfsma.salvo.service.GamePlayerService;
 import com.dfsma.salvo.service.PlayerService;
 import com.dfsma.salvo.service.SalvoService;
+import com.dfsma.salvo.service.ScoreService;
 import com.dfsma.salvo.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 
 @RestController
@@ -30,6 +35,8 @@ public class SalvoController {
 
     @Autowired
     SalvoService salvoService;
+
+
 
     @PostMapping("/games/players/{gamePlayer_id}/salvoes")
     public ResponseEntity<Map<String, Object>> placeSalvos(@PathVariable Long gamePlayer_id, @RequestBody Salvo salvo, Authentication authentication){
@@ -69,6 +76,7 @@ public class SalvoController {
         if(mySalvosSize > enemySalvosSize) {
             return new ResponseEntity<>(Util.makeMap("error", "Wait enemy shot."), HttpStatus.FORBIDDEN);
         }
+
 
         salvo.setTurn(mySalvosSize + 1 );
         salvo.setGamePlayer(gamePlayer);

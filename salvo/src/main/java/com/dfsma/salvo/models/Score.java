@@ -1,12 +1,11 @@
 package com.dfsma.salvo.models;
 
+import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Entity
 public class Score {
@@ -17,7 +16,7 @@ public class Score {
     private long id;
 
     private double score;
-    private Date finishDate;
+    private LocalDateTime finishDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
@@ -30,9 +29,9 @@ public class Score {
     public Score() {
     }
 
-    public Score(double score, Player player, Game game) {
+    public Score(double score, Player player, Game game, LocalDateTime date) {
         this.score = score;
-        this.finishDate = new Date();
+        this.finishDate = date;
         player.addScore(this);
         game.addScore(this);
     }
@@ -49,11 +48,11 @@ public class Score {
         this.score = score;
     }
 
-    public Date getFinishDate() {
+    public LocalDateTime getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(Date finishDate) {
+    public void setFinishDate(LocalDateTime finishDate) {
         this.finishDate = finishDate;
     }
 
