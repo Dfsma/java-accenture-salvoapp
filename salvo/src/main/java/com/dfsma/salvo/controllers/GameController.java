@@ -87,10 +87,14 @@ public class GameController {
             GamePlayer gamePlayer = gamePlayerService.findGamePlayerById(gamePlayer_id).orElse(null);
             System.out.println(gamePlayer.getPlayer().getId());
 
+            /*
+            Util.addScoreToFinishedGame(gamePlayer);
+            */
+
             if(Util.setGameState(gamePlayer) == "WON"){
                 if(gamePlayer.getGame().getScores().size()<2) {
-                    Set<Score> scores = new HashSet<>();
                     Score score1 = new Score();
+                    Set<Score> scores = new HashSet<>();
                     score1.setPlayer(gamePlayer.getPlayer());
                     score1.setGame(gamePlayer.getGame());
                     score1.setFinishDate(LocalDateTime.now());
@@ -128,6 +132,7 @@ public class GameController {
                     scores.add(score2);
                     Util.enemyGamePlayer(gamePlayer).getGame().setScores(scores);
                 }
+
             }
 
             if(gamePlayer.getPlayer().getId() == player.getId()){
