@@ -3,6 +3,7 @@ package com.dfsma.salvo.util;
 import com.dfsma.salvo.dto.hitDTO;
 import com.dfsma.salvo.models.GamePlayer;
 import com.dfsma.salvo.models.Score;
+import com.dfsma.salvo.service.GamePlayerService;
 import com.dfsma.salvo.service.ScoreService;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,10 @@ public class Util {
 
     @Autowired
     static
+
     ScoreService scoreService;
+
+
 
     public static Map<String, Object> makeMap(String key, Object value) {
         Map<String, Object> map = new LinkedHashMap<>();
@@ -46,21 +50,15 @@ public class Util {
     }
 
     public static String setGameState(GamePlayer gamePlayer){
-
-        if(gamePlayer.getGame().getGamePlayers().size() == 2) {
-
+        if(gamePlayer.getGame().getGamePlayers().size()==2) {
             int myImpacts = hitDTO.getDamage(gamePlayer);
             int enemyImpacts = getDamage(Util.enemyGamePlayer(gamePlayer));
 
-
             if(myImpacts == 17 && enemyImpacts == 17){
-
-                return  "TIE";
+                return "TIE";
             }else if(myImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
-
-                return "LOSE";
+                return "LOST";
             }else if(enemyImpacts == 17 && gamePlayer.getSalvoes().size() == Util.enemyGamePlayer(gamePlayer).getSalvoes().size()){
-
                 return "WON";
             }
         }
@@ -74,7 +72,53 @@ public class Util {
             return "PLAY";
         }
 
+    }
 
+    public static void addScoreToFinishedGame(GamePlayer gamePlayer){
+
+        if(setGameState(gamePlayer) == "WON"){
+            if(gamePlayer.getGame().getScores().size()<2) {
+                Score score1 = new Score();
+                Set<Score> scores = new HashSet<>();
+                score1.setPlayer(gamePlayer.getPlayer());
+                score1.setGame(gamePlayer.getGame());
+                score1.setFinishDate(LocalDateTime.now());
+                score1.setScore(1D);
+                scoreService.saveScore(score1);
+                scores.add(score1);
+
+                Score score2 = new Score();
+                score2.setPlayer(enemyGamePlayer(gamePlayer).getPlayer());
+                score2.setGame(gamePlayer.getGame());
+                score2.setFinishDate(LocalDateTime.now());
+                score2.setScore(0D);
+                scoreService.saveScore(score2);
+                scores.add(score2);
+                enemyGamePlayer(gamePlayer).getGame().setScores(scores);
+            }
+        }
+        if(setGameState(gamePlayer) == "TIE"){
+            if(gamePlayer.getGame().getScores().size()<2) {
+                Set<Score> scores = new HashSet<Score>();
+                Score score1 = new Score();
+                score1.setPlayer(gamePlayer.getPlayer());
+                score1.setGame(gamePlayer.getGame());
+                score1.setFinishDate(LocalDateTime.now());
+                score1.setScore(0.5D);
+                scoreService.saveScore(score1);
+
+                Score score2 = new Score();
+                score2.setPlayer(enemyGamePlayer(gamePlayer).getPlayer());
+                score2.setGame(gamePlayer.getGame());
+                score2.setFinishDate(LocalDateTime.now());
+                score2.setScore(0.5D);
+                scoreService.saveScore(score2);
+                scores.add(score1);
+                scores.add(score2);
+                enemyGamePlayer(gamePlayer).getGame().setScores(scores);
+            }
+
+        }
 
     }
 
